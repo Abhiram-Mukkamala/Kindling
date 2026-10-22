@@ -60,7 +60,7 @@ export default function CodeFindingsPanel({
         </div>
         <div className="findings-body">
           <p className="findings-notice">
-            Code analysis skipped because code model is not configured.
+            Code analysis skipped because Qwen is not configured.
           </p>
           <p className="findings-subnotice">
             To enable deep source code analysis, set <code>CODE_MODEL</code> in your backend <code>.env</code> file (e.g. <code>CODE_MODEL=nvidia/nemotron-3-ultra-550b-a55b</code>).

@@ -60,16 +60,22 @@ hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
 <div class="container">
 
 <h1>hacktober_Kindling — Complete Call Flow &amp; Architecture Documentation</h1>
-<p class="subtitle">Generated from graphify knowledge graph: 254 nodes, 485 edges, 14 communities. Commit: 4bf17c1</p>
+<p class="subtitle">Generated from graphify knowledge graph: 248 nodes, 503 edges, 18 communities. Commit: 6d7cd3a</p>
 
 <div class="nav">
     <a href="#overview">Architecture Overview</a>
+    <a href="#extract-pipeline">Extraction Pipeline</a>
     <a href="#build-graph">Graph Build</a>
+    <a href="#outputs-docs">Outputs &amp; Docs</a>
     <a href="#cli-skills">CLI &amp; Skill Installers</a>
     <a href="#ingest-cache-update">Ingestion &amp; Updates</a>
-    <a href="#security-global">Security &amp; Global Graph</a>
     <a href="#tests-fixtures">Tests &amp; Fixtures</a>
-    <a href="#frontend-readmemd-react">Frontend Readmemd React</a>
+    <a href="#configuration-and-model-role-routing">Configuration and Model Role Routing</a>
+    <a href="#architecture-specifications-and-project-strategy">Architecture Specifications and Project Strategy</a>
+    <a href="#prompt-engineering-and-model-templates">Prompt Engineering and Model Templates</a>
+    <a href="#project-visual-hero-graphic">Project Visual Hero Graphic</a>
+    <a href="#react-ui-framework-asset">React UI Framework Asset</a>
+    <a href="#vite-bundler-asset">Vite Bundler Asset</a>
 </div>
 
 <!-- ====== Architecture Overview ====== -->
@@ -79,29 +85,42 @@ hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
 
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    BUILD_GRAPH_321CBB04("Graph Build<br/><small>92 nodes</small>")
+    EXTRACT_PIPELINE_5F350230("Extraction Pipeline<br/><small>2 nodes</small>")
+    class EXTRACT_PIPELINE_5F350230 module;
+    BUILD_GRAPH_321CBB04("Graph Build<br/><small>68 nodes</small>")
     class BUILD_GRAPH_321CBB04 module;
+    OUTPUTS_DOCS_ED82387C("Outputs &amp; Docs<br/><small>4 nodes</small>")
+    class OUTPUTS_DOCS_ED82387C module;
     CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>41 nodes</small>")
     class CLI_SKILLS_9964CBB8 module;
     INGEST_CACHE_UPDATE_FF457338("Ingestion &amp; Updates<br/><small>26 nodes</small>")
     class INGEST_CACHE_UPDATE_FF457338 module;
-    SECURITY_GLOBAL_5B9C6A04("Security &amp; Global Graph<br/><small>11 nodes</small>")
-    class SECURITY_GLOBAL_5B9C6A04 module;
-    TESTS_FIXTURES_B84B1DCC("Tests &amp; Fixtures<br/><small>80 nodes</small>")
+    TESTS_FIXTURES_B84B1DCC("Tests &amp; Fixtures<br/><small>72 nodes</small>")
     class TESTS_FIXTURES_B84B1DCC module;
-    FRONTEND_READMEMD_REACT_1725BBD0("Frontend Readmemd React<br/><small>4 nodes</small>")
-    class FRONTEND_READMEMD_REACT_1725BBD0 module;
-    CLI_SKILLS_9964CBB8 -->|imports x21| TESTS_FIXTURES_B84B1DCC
-    TESTS_FIXTURES_B84B1DCC -->|calls x13| BUILD_GRAPH_321CBB04
-    TESTS_FIXTURES_B84B1DCC -->|imports x12| CLI_SKILLS_9964CBB8
-    CLI_SKILLS_9964CBB8 -->|calls x8| INGEST_CACHE_UPDATE_FF457338
-    BUILD_GRAPH_321CBB04 -->|calls x8| TESTS_FIXTURES_B84B1DCC
-    TESTS_FIXTURES_B84B1DCC -->|imports x7| INGEST_CACHE_UPDATE_FF457338
-    CLI_SKILLS_9964CBB8 -->|calls x5| BUILD_GRAPH_321CBB04
-    INGEST_CACHE_UPDATE_FF457338 -->|imports x4| TESTS_FIXTURES_B84B1DCC
-    BUILD_GRAPH_321CBB04 -->|calls| INGEST_CACHE_UPDATE_FF457338
-    SECURITY_GLOBAL_5B9C6A04 -->|references| INGEST_CACHE_UPDATE_FF457338
-    INGEST_CACHE_UPDATE_FF457338 -->|imports| CLI_SKILLS_9964CBB8
+    CONFIGURATION_AND_MODEL_ROLE_ROUTING_A3E0DDCF("Configuration and Model Role Routing<br/><small>22 nodes</small>")
+    class CONFIGURATION_AND_MODEL_ROLE_ROUTING_A3E0DDCF module;
+    ARCHITECTURE_SPECIFICATIONS_AND_PROJECT_STRATEGY_534C55C6("Architecture Specifications and Project Strategy<br/><small>9 nodes</small>")
+    class ARCHITECTURE_SPECIFICATIONS_AND_PROJECT_STRATEGY_534C55C6 module;
+    PROMPT_ENGINEERING_AND_MODEL_TEMPLATES_2AA34590("Prompt Engineering and Model Templates<br/><small>1 nodes</small>")
+    class PROMPT_ENGINEERING_AND_MODEL_TEMPLATES_2AA34590 module;
+    PROJECT_VISUAL_HERO_GRAPHIC_39D71B03("Project Visual Hero Graphic<br/><small>1 nodes</small>")
+    class PROJECT_VISUAL_HERO_GRAPHIC_39D71B03 module;
+    REACT_UI_FRAMEWORK_ASSET_0FBCB484("React UI Framework Asset<br/><small>1 nodes</small>")
+    class REACT_UI_FRAMEWORK_ASSET_0FBCB484 module;
+    VITE_BUNDLER_ASSET_82FBE069("Vite Bundler Asset<br/><small>1 nodes</small>")
+    class VITE_BUNDLER_ASSET_82FBE069 module;
+    TESTS_FIXTURES_B84B1DCC -->|calls x23| BUILD_GRAPH_321CBB04
+    CLI_SKILLS_9964CBB8 -->|imports x14| TESTS_FIXTURES_B84B1DCC
+    BUILD_GRAPH_321CBB04 -->|uses x14| TESTS_FIXTURES_B84B1DCC
+    CLI_SKILLS_9964CBB8 -->|calls x12| BUILD_GRAPH_321CBB04
+    TESTS_FIXTURES_B84B1DCC -->|imports x8| CONFIGURATION_AND_MODEL_ROLE_ROUTING_A3E0DDCF
+    CLI_SKILLS_9964CBB8 -->|calls x7| INGEST_CACHE_UPDATE_FF457338
+    CONFIGURATION_AND_MODEL_ROLE_ROUTING_A3E0DDCF -->|imports x7| BUILD_GRAPH_321CBB04
+    BUILD_GRAPH_321CBB04 -->|calls x6| CONFIGURATION_AND_MODEL_ROLE_ROUTING_A3E0DDCF
+    CLI_SKILLS_9964CBB8 -->|imports x5| CONFIGURATION_AND_MODEL_ROLE_ROUTING_A3E0DDCF
+    CONFIGURATION_AND_MODEL_ROLE_ROUTING_A3E0DDCF -->|imports x4| TESTS_FIXTURES_B84B1DCC
+    BUILD_GRAPH_321CBB04 -->|calls x4| INGEST_CACHE_UPDATE_FF457338
+    TESTS_FIXTURES_B84B1DCC -->|imports x4| INGEST_CACHE_UPDATE_FF457338
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -118,102 +137,41 @@ flowchart LR
     <h4>Architecture Layers</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>Layer</th><th>Nodes</th><th>Communities</th></tr>
-      <tr><td>Graph Build</td><td>92</td><td><code>2, 5, 6, 7, 8, 9</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>41</td><td><code>1</code></td></tr><tr><td>Ingestion &amp; Updates</td><td>26</td><td><code>4</code></td></tr><tr><td>Security &amp; Global Graph</td><td>11</td><td><code>10, 11</code></td></tr><tr><td>Tests &amp; Fixtures</td><td>80</td><td><code>0, 3, 13</code></td></tr><tr><td>Frontend Readmemd React</td><td>4</td><td><code>12</code></td></tr>
+      <tr><td>Extraction Pipeline</td><td>2</td><td><code>11</code></td></tr><tr><td>Graph Build</td><td>68</td><td><code>2, 5, 6, 8</code></td></tr><tr><td>Outputs &amp; Docs</td><td>4</td><td><code>10, 13</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>41</td><td><code>1</code></td></tr><tr><td>Ingestion &amp; Updates</td><td>26</td><td><code>3</code></td></tr><tr><td>Tests &amp; Fixtures</td><td>72</td><td><code>0, 9, 17</code></td></tr><tr><td>Configuration and Model Role Routing</td><td>22</td><td><code>4</code></td></tr><tr><td>Architecture Specifications and Project Strategy</td><td>9</td><td><code>7</code></td></tr><tr><td>Prompt Engineering and Model Templates</td><td>1</td><td><code>12</code></td></tr><tr><td>Project Visual Hero Graphic</td><td>1</td><td><code>14</code></td></tr><tr><td>React UI Framework Asset</td><td>1</td><td><code>15</code></td></tr><tr><td>Vite Bundler Asset</td><td>1</td><td><code>16</code></td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Core Flow</h4>
-    <div class="arrow-chain">Security &amp; Global Graph -&gt; Ingestion &amp; Updates -&gt; Tests &amp; Fixtures -&gt; Graph Build -&gt; CLI &amp; Skill Installers -&gt; Frontend Readmemd React</div>
+    <div class="arrow-chain">Extraction Pipeline -&gt; Graph Build -&gt; Tests &amp; Fixtures -&gt; Configuration and Model Role Routing -&gt; Ingestion &amp; Updates -&gt; CLI &amp; Skill Installers -&gt; Outputs &amp; Docs</div>
   </div>
 </div>
 <div class="grid">
   <div class="card">
     <h4>Graph Report Highlights</h4>
     <ul>
-      <li>254 nodes · 485 edges · 14 communities (13 shown, 1 thin omitted)</li>
-      <li>Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 29 edges (avg confidence: 0.92)</li>
+      <li>248 nodes · 503 edges · 18 communities (11 shown, 7 thin omitted)</li>
+      <li>Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 33 edges (avg confidence: 0.91)</li>
       <li>Token cost: 0 input · 0 output</li>
       <li>1. `Draft` - 19 edges</li>
-      <li>2. `process_drafts()` - 17 edges</li>
-      <li>3. `KINDLING: Master Handoff for Antigravity CLI` - 17 edges</li>
+      <li>2. `TestModelRoutingAndPipeline` - 18 edges</li>
+      <li>3. `process_drafts()` - 17 edges</li>
     </ul>
   </div>
 </div>
 <hr>
-<!-- ====== 2. Graph Build ====== -->
-<h2 id="build-graph">2. Graph Build</h2>
-<p>Graph Build groups implementation around frontend, packagejson, handoffmd, build, mostly in frontend/package.json, HANDOFF.md, BUILD_PROMPTS.md. This section covers 92 nodes and 105 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<!-- ====== 2. Extraction Pipeline ====== -->
+<h2 id="extract-pipeline">2. Extraction Pipeline</h2>
+<p>Extraction Pipeline groups implementation around backend, python, dependencies, requirementstxt, mostly in backend/requirements.txt, requirements.txt. This section covers 2 nodes and 1 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Graph Build (92 nodes, 105 edges)
-    subgraph build_graph_backend_pipeline_py_c8548744["backend/pipeline.py"]
-        backend_pipeline_draft_issues_b569c65e("draft_issues()<br/><small>backend/pipeline.py</small>")
-        backend_pipeline_draft_step_7a622f12("draft_step()<br/><small>backend/pipeline.py</small>")
-        backend_pipeline_build_drafter_user_prompt_5ea89ce5("_build_drafter_user_prompt()<br/><small>backend/pipeline.py</small>")
-        backend_pipeline_scan_step_41dd1eb7("scan_step()<br/><small>backend/pipeline.py</small>")
-    end
-    subgraph build_graph_frontend_package_json_640d842e["frontend/package.json"]
-        frontend_package_9c7557c1("package.json")
-        ref_react_47bfb9fb("react<br/><small>frontend/package.json</small>")
-        ref_react_dom_61ea372d("react-dom<br/><small>frontend/package.json</small>")
-    end
-    subgraph build_graph_backend_llm_py_e2364b74["backend/llm.py"]
-        backend_llm_chat_json_980eee3e("chat_json()<br/><small>backend/llm.py</small>")
-        backend_llm_extract_json_0d42239c("extract_json()<br/><small>backend/llm.py</small>")
-    end
-    subgraph build_graph_frontend_src_App_jsx_55fd69e7["frontend/src/App.jsx"]
-        frontend_src_app_7da8908b("App.jsx")
-        frontend_src_app_app_9781f459("App()<br/><small>frontend/src/App.jsx</small>")
-    end
-    backend_main_screenshot_scan_vision_worker_51e364ac("vision_worker()<br/><small>backend/main.py</small>")
-    frontend_src_main_c1980e55("main.jsx")
-    frontend_test_code_reviewer_ff1766bb("test-code-reviewer.js")
-    frontend_vite_config_3ac59d22("vite.config.js")
-    frontend_src_components_codefindingspanel_codefi_a338a9d1("CodeFindingsPanel()<br/><small>src/components/CodeFindingsPanel.jsx</small>")
-    frontend_src_components_issuecard_issuecard_3a65abe5("IssueCard()<br/><small>src/components/IssueCard.jsx</small>")
-    frontend_src_components_pipelineview_pipelinevie_82c05fd2("PipelineView()<br/><small>src/components/PipelineView.jsx</small>")
-    frontend_src_app_app_9781f459 -->|calls| frontend_src_components_pipelineview_pipelinevie_82c05fd2
-    frontend_src_app_app_9781f459 -->|calls| frontend_src_components_codefindingspanel_codefi_a338a9d1
-    frontend_src_app_app_9781f459 -->|calls| frontend_src_components_issuecard_issuecard_3a65abe5
-    backend_llm_chat_json_980eee3e -->|calls| backend_llm_extract_json_0d42239c
-    backend_main_screenshot_scan_vision_worker_51e364ac -->|calls| backend_llm_extract_json_0d42239c
-    backend_pipeline_draft_issues_b569c65e -->|calls| backend_pipeline_draft_step_7a622f12
-    backend_pipeline_draft_step_7a622f12 -->|calls| backend_pipeline_build_drafter_user_prompt_5ea89ce5
-    backend_pipeline_draft_step_7a622f12 -->|calls| backend_llm_chat_json_980eee3e
-    backend_pipeline_scan_step_41dd1eb7 -->|calls| backend_llm_chat_json_980eee3e
-    frontend_package_9c7557c1 -->|imports| ref_react_47bfb9fb
-    frontend_package_9c7557c1 -->|imports| ref_react_dom_61ea372d
-    frontend_src_app_7da8908b -->|imports| frontend_src_components_pipelineview_pipelinevie_82c05fd2
-    frontend_src_app_7da8908b -->|imports| frontend_src_components_issuecard_issuecard_3a65abe5
-    frontend_src_app_7da8908b -->|imports| frontend_src_components_codefindingspanel_codefi_a338a9d1
-    frontend_src_app_7da8908b -->|imports| ref_react_47bfb9fb
-    frontend_src_main_c1980e55 -->|imports| frontend_src_app_app_9781f459
-    frontend_src_main_c1980e55 -->|imports| ref_react_47bfb9fb
-    frontend_src_main_c1980e55 -->|imports| ref_react_dom_61ea372d
-    frontend_src_main_c1980e55 -->|imports| frontend_src_app_7da8908b
-    frontend_test_code_reviewer_ff1766bb -->|imports| ref_react_47bfb9fb
-    frontend_test_code_reviewer_ff1766bb -->|imports| ref_react_dom_61ea372d
-    %% Omitted for readability: 74 nodes, 0 edges
-    class backend_pipeline_draft_issues_b569c65e function;
-    class backend_pipeline_draft_step_7a622f12 function;
-    class backend_pipeline_build_drafter_user_prompt_5ea89ce5 function;
-    class backend_pipeline_scan_step_41dd1eb7 function;
-    class frontend_package_9c7557c1 function;
-    class ref_react_47bfb9fb function;
-    class ref_react_dom_61ea372d function;
-    class backend_llm_chat_json_980eee3e function;
-    class backend_llm_extract_json_0d42239c function;
-    class frontend_src_app_7da8908b ui;
-    class frontend_src_app_app_9781f459 ui;
-    class backend_main_screenshot_scan_vision_worker_51e364ac function;
-    class frontend_src_main_c1980e55 ui;
-    class frontend_test_code_reviewer_ff1766bb test;
-    class frontend_vite_config_3ac59d22 module;
-    class frontend_src_components_codefindingspanel_codefi_a338a9d1 ui;
-    class frontend_src_components_issuecard_issuecard_3a65abe5 ui;
-    class frontend_src_components_pipelineview_pipelinevie_82c05fd2 ui;
+    %% Section: Extraction Pipeline (2 nodes, 1 edges)
+    backend_requirements_txt_aaf69b73("Backend Python Dependencies<br/><small>backend/requirements.txt</small>")
+    requirements_txt_root_296c9001("Root Python Dependencies<br/><small>requirements.txt</small>")
+    backend_requirements_txt_aaf69b73 -->|semantically similar to| requirements_txt_root_296c9001
+    class backend_requirements_txt_aaf69b73 concept;
+    class requirements_txt_root_296c9001 concept;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -237,243 +195,19 @@ flowchart LR
 </tr>
 <tr>
   <td>1</td>
-  <td><code>App()</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td><code>main.jsx</code><br><small style="color:var(--muted)">frontend/src/main.jsx</small></td>
-  <td><code>CodeFindingsPanel()</code><br><small style="color:var(--muted)">src/components/CodeFindingsPanel.jsx</small><br><code>IssueCard()</code><br><small style="color:var(--muted)">src/components/IssueCard.jsx</small><br><code>PipelineView()</code><br><small style="color:var(--muted)">src/components/PipelineView.jsx</small></td>
-  <td>App() node in frontend/src/App.jsx.</td>
+  <td><code>Backend Python Dependencies</code><br><small style="color:var(--muted)">backend/requirements.txt</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Backend Python Dependencies.</td>
 </tr>
 <tr>
   <td>2</td>
-  <td><code>CodeFindingsPanel()</code><br><small style="color:var(--muted)">src/components/CodeFindingsPanel.jsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td><code>App()</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small><br><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small></td>
-  <td>No direct outbound edge</td>
-  <td>CodeFindingsPanel() node in src/components/CodeFindingsPanel.jsx.</td>
-</tr>
-<tr>
-  <td>3</td>
-  <td><code>IssueCard()</code><br><small style="color:var(--muted)">src/components/IssueCard.jsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td><code>App()</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small><br><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small></td>
-  <td>No direct outbound edge</td>
-  <td>IssueCard() node in src/components/IssueCard.jsx.</td>
-</tr>
-<tr>
-  <td>4</td>
-  <td><code>PipelineView()</code><br><small style="color:var(--muted)">src/components/PipelineView.jsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td><code>App()</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small><br><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small></td>
-  <td>No direct outbound edge</td>
-  <td>PipelineView() node in src/components/PipelineView.jsx.</td>
-</tr>
-<tr>
-  <td>5</td>
-  <td><code>runTests()</code><br><small style="color:var(--muted)">frontend/test-code-reviewer.js</small></td>
-  <td><span class="tag tag-func">Test</span></td>
+  <td><code>Root Python Dependencies</code><br><small style="color:var(--muted)">requirements.txt</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Verifies imports, entry points, or version behavior.</td>
-</tr>
-<tr>
-  <td>6</td>
-  <td><code>package.json</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>@types/react</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>@types/react-dom</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>@vitejs/plugin-react</code><br><small style="color:var(--muted)">frontend/package.json</small><br>+4 more</td>
-  <td>package.json node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>7</td>
-  <td><code>dependencies</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>dependencies node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>8</td>
-  <td><code>react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>react node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>9</td>
-  <td><code>react-dom</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>react-dom node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>10</td>
-  <td><code>devDependencies</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>devDependencies node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>11</td>
-  <td><code>oxlint</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>oxlint node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>12</td>
-  <td><code>@types/react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>@types/react node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>13</td>
-  <td><code>@types/react-dom</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>@types/react-dom node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>14</td>
-  <td><code>vite</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>vite node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>15</td>
-  <td><code>@vitejs/plugin-react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>@vitejs/plugin-react node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>16</td>
-  <td><code>name</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>name node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>17</td>
-  <td><code>private</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>private node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>18</td>
-  <td><code>type</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>type node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>19</td>
-  <td><code>version</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>version node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>20</td>
-  <td><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td><code>main.jsx</code><br><small style="color:var(--muted)">frontend/src/main.jsx</small></td>
-  <td><code>CodeFindingsPanel()</code><br><small style="color:var(--muted)">src/components/CodeFindingsPanel.jsx</small><br><code>CodeFindingsPanel.jsx</code><br><small style="color:var(--muted)">src/components/CodeFindingsPanel.jsx</small><br><code>IssueCard()</code><br><small style="color:var(--muted)">src/components/IssueCard.jsx</small><br>+4 more</td>
-  <td>App.jsx node in frontend/src/App.jsx.</td>
-</tr>
-<tr>
-  <td>21</td>
-  <td><code>CodeFindingsPanel.jsx</code><br><small style="color:var(--muted)">src/components/CodeFindingsPanel.jsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small></td>
-  <td><code>react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td>CodeFindingsPanel.jsx node in src/components/CodeFindingsPanel.jsx.</td>
-</tr>
-<tr>
-  <td>22</td>
-  <td><code>IssueCard.jsx</code><br><small style="color:var(--muted)">src/components/IssueCard.jsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small></td>
-  <td><code>react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td>IssueCard.jsx node in src/components/IssueCard.jsx.</td>
-</tr>
-<tr>
-  <td>23</td>
-  <td><code>PipelineView.jsx</code><br><small style="color:var(--muted)">src/components/PipelineView.jsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small></td>
-  <td><code>react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td>PipelineView.jsx node in src/components/PipelineView.jsx.</td>
-</tr>
-<tr>
-  <td>24</td>
-  <td><code>main.jsx</code><br><small style="color:var(--muted)">frontend/src/main.jsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>App()</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small><br><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small><br><code>frontend_src_index</code><br>+2 more</td>
-  <td>main.jsx node in frontend/src/main.jsx.</td>
-</tr>
-<tr>
-  <td>25</td>
-  <td><code>test-code-reviewer.js</code><br><small style="color:var(--muted)">frontend/test-code-reviewer.js</small></td>
-  <td><span class="tag tag-func">Test</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>react</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>react-dom</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>ref_node_assert</code><br>+1 more</td>
-  <td>Verifies imports, entry points, or version behavior.</td>
-</tr>
-<tr>
-  <td>26</td>
-  <td><code>vite.config.js</code><br><small style="color:var(--muted)">frontend/vite.config.js</small></td>
-  <td><span class="tag tag-class">Module</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>@vitejs/plugin-react</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>vite</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td>Reads, resolves, or persists project configuration.</td>
-</tr>
-<tr>
-  <td>27</td>
-  <td><code>oxlint</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>package.json</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td>No direct outbound edge</td>
-  <td>oxlint node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>28</td>
-  <td><code>react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small><br><code>CodeFindingsPanel.jsx</code><br><small style="color:var(--muted)">src/components/CodeFindingsPanel.jsx</small><br><code>IssueCard.jsx</code><br><small style="color:var(--muted)">src/components/IssueCard.jsx</small><br>+4 more</td>
-  <td>No direct outbound edge</td>
-  <td>react node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>29</td>
-  <td><code>react-dom</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>main.jsx</code><br><small style="color:var(--muted)">frontend/src/main.jsx</small><br><code>package.json</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>test-code-reviewer.js</code><br><small style="color:var(--muted)">frontend/test-code-reviewer.js</small></td>
-  <td>No direct outbound edge</td>
-  <td>react-dom node in frontend/package.json.</td>
-</tr>
-<tr>
-  <td>30</td>
-  <td><code>@types/react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>package.json</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
-  <td>No direct outbound edge</td>
-  <td>@types/react node in frontend/package.json.</td>
+  <td>Documentation node describing Root Python Dependencies.</td>
 </tr>
 </table>
 
@@ -482,42 +216,492 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>frontend/package.json</code></td><td>27 nodes</td></tr>
-<tr><td><code>HANDOFF.md</code></td><td>19 nodes</td></tr>
-<tr><td><code>BUILD_PROMPTS.md</code></td><td>10 nodes</td></tr>
-<tr><td><code>backend/pipeline.py</code></td><td>7 nodes</td></tr>
-<tr><td><code>frontend/.oxlintrc.json</code></td><td>6 nodes</td></tr>
-<tr><td><code>backend/llm.py</code></td><td>4 nodes</td></tr>
-<tr><td><code>frontend/src/App.jsx</code></td><td>2 nodes</td></tr>
-<tr><td><code>src/components/CodeFindingsPanel.jsx</code></td><td>2 nodes</td></tr>
+      <tr><td><code>backend/requirements.txt</code></td><td>1 nodes</td></tr>
+<tr><td><code>requirements.txt</code></td><td>1 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x56, imports x17, imports x11, calls x9. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: semantically similar to x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
-<!-- ====== 3. CLI & Skill Installers ====== -->
-<h2 id="cli-skills">3. CLI &amp; Skill Installers</h2>
-<p>CLI &amp; Skill Installers groups implementation around backend, mainpy, run, eventspy, mostly in backend/main.py, backend/events.py, backend/pipeline.py. This section covers 41 nodes and 62 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<!-- ====== 3. Graph Build ====== -->
+<h2 id="build-graph">3. Graph Build</h2>
+<p>Graph Build groups implementation around frontend, packagejson, backend, pipelinepy, mostly in frontend/package.json, backend/pipeline.py, frontend/.oxlintrc.json. This section covers 68 nodes and 87 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: CLI &amp; Skill Installers (41 nodes, 62 edges)
+    %% Section: Graph Build (68 nodes, 87 edges)
+    subgraph build_graph_backend_pipeline_py_c8548744["backend/pipeline.py"]
+        backend_pipeline_run_pipeline_316a13ea("run_pipeline()<br/><small>backend/pipeline.py</small>")
+        backend_pipeline_draft_issues_b569c65e("draft_issues()<br/><small>backend/pipeline.py</small>")
+        backend_pipeline_draft_step_7a622f12("draft_step()<br/><small>backend/pipeline.py</small>")
+        backend_pipeline_build_drafter_user_prompt_5ea89ce5("_build_drafter_user_prompt()<br/><small>backend/pipeline.py</small>")
+        backend_pipeline_replay_cached_47787dab("replay_cached()<br/><small>backend/pipeline.py</small>")
+        backend_pipeline_scan_step_41dd1eb7("scan_step()<br/><small>backend/pipeline.py</small>")
+    end
+    subgraph build_graph_External_generated_653891f5["External / generated"]
+        asyncio_4f5a0f01("asyncio")
+        json_05d97e6e("json")
+        sys_b4c56ee8("sys")
+    end
+    subgraph build_graph_backend_graphify_tools_py_d9225867["backend/graphify_tools.py"]
+        backend_graphify_tools_59a91069("graphify_tools.py")
+        backend_graphify_tools_get_graph_context_for_fil_d4a84c82("context for files()<br/><small>backend/graphify_tools.py</small>")
+        backend_graphify_tools_get_graph_summary_3dbfb77e("get_graph_summary()<br/><small>backend/graphify_tools.py</small>")
+    end
+    subgraph build_graph_backend_llm_py_e2364b74["backend/llm.py"]
+        backend_llm_chat_json_980eee3e("chat_json()<br/><small>backend/llm.py</small>")
+        backend_llm_extract_json_0d42239c("extract_json()<br/><small>backend/llm.py</small>")
+    end
+    subgraph build_graph_scripts_demonstrate_graphify_py_603905c5["scripts/demonstrate_graphify.py"]
+        scripts_demonstrate_graphify_e12c5134("demonstrate_graphify.py")
+        scripts_demonstrate_graphify_main_76c5fd5f("main()<br/><small>scripts/demonstrate_graphify.py</small>")
+    end
+    frontend_package_9c7557c1("package.json")
+    scripts_run_cli_89dc9f80("run_cli.py")
+    backend_llm_chat_json_980eee3e -->|calls| backend_llm_extract_json_0d42239c
+    backend_pipeline_draft_issues_b569c65e -->|calls| backend_pipeline_draft_step_7a622f12
+    backend_pipeline_draft_step_7a622f12 -->|calls| backend_pipeline_build_drafter_user_prompt_5ea89ce5
+    backend_pipeline_draft_step_7a622f12 -->|calls| backend_llm_chat_json_980eee3e
+    backend_pipeline_replay_cached_47787dab -->|calls| asyncio_4f5a0f01
+    backend_pipeline_run_pipeline_316a13ea -->|calls| json_05d97e6e
+    backend_pipeline_run_pipeline_316a13ea -->|calls| backend_pipeline_replay_cached_47787dab
+    backend_pipeline_run_pipeline_316a13ea -->|calls| backend_pipeline_scan_step_41dd1eb7
+    backend_pipeline_run_pipeline_316a13ea -->|calls| backend_pipeline_draft_step_7a622f12
+    backend_pipeline_scan_step_41dd1eb7 -->|calls| backend_llm_chat_json_980eee3e
+    backend_graphify_tools_get_graph_context_for_fil_d4a84c82 -->|calls| json_05d97e6e
+    backend_graphify_tools_get_graph_summary_3dbfb77e -->|calls| json_05d97e6e
+    scripts_demonstrate_graphify_main_76c5fd5f -->|calls| backend_graphify_tools_get_graph_summary_3dbfb77e
+    scripts_demonstrate_graphify_main_76c5fd5f -->|calls| sys_b4c56ee8
+    scripts_demonstrate_graphify_main_76c5fd5f -->|calls| backend_graphify_tools_get_graph_context_for_fil_d4a84c82
+    backend_graphify_tools_59a91069 -->|imports| json_05d97e6e
+    backend_graphify_tools_59a91069 -->|imports| sys_b4c56ee8
+    scripts_demonstrate_graphify_e12c5134 -->|imports| sys_b4c56ee8
+    scripts_demonstrate_graphify_e12c5134 -->|imports| backend_graphify_tools_get_graph_context_for_fil_d4a84c82
+    scripts_demonstrate_graphify_e12c5134 -->|imports| backend_graphify_tools_get_graph_summary_3dbfb77e
+    scripts_demonstrate_graphify_e12c5134 -->|imports| json_05d97e6e
+    scripts_demonstrate_graphify_e12c5134 -->|imports| backend_graphify_tools_59a91069
+    scripts_run_cli_89dc9f80 -->|imports| asyncio_4f5a0f01
+    scripts_run_cli_89dc9f80 -->|imports| sys_b4c56ee8
+    %% Omitted for readability: 50 nodes, 1 edges
+    class backend_pipeline_run_pipeline_316a13ea function;
+    class backend_pipeline_draft_issues_b569c65e function;
+    class backend_pipeline_draft_step_7a622f12 function;
+    class backend_pipeline_build_drafter_user_prompt_5ea89ce5 function;
+    class backend_pipeline_replay_cached_47787dab function;
+    class backend_pipeline_scan_step_41dd1eb7 function;
+    class asyncio_4f5a0f01 async;
+    class json_05d97e6e function;
+    class sys_b4c56ee8 function;
+    class backend_graphify_tools_59a91069 module;
+    class backend_graphify_tools_get_graph_context_for_fil_d4a84c82 function;
+    class backend_graphify_tools_get_graph_summary_3dbfb77e function;
+    class backend_llm_chat_json_980eee3e function;
+    class backend_llm_extract_json_0d42239c function;
+    class scripts_demonstrate_graphify_e12c5134 module;
+    class scripts_demonstrate_graphify_main_76c5fd5f function;
+    class frontend_package_9c7557c1 function;
+    class scripts_run_cli_89dc9f80 entry;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>package.json</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>@types/react</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>@types/react-dom</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>@vitejs/plugin-react</code><br><small style="color:var(--muted)">frontend/package.json</small><br>+4 more</td>
+  <td>package.json node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>dependencies</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>dependencies node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>react node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>react-dom</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>react-dom node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>devDependencies</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>devDependencies node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>oxlint</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>oxlint node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>@types/react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>@types/react node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>@types/react-dom</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>@types/react-dom node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>vite</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>vite node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>@vitejs/plugin-react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>@vitejs/plugin-react node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>name</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>name node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>private</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>private node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>scripts</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>scripts node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>build</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>build node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>dev</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>dev node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>lint</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>lint node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>preview</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>preview node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>test</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>type</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>type node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>version</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>version node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>vite.config.js</code><br><small style="color:var(--muted)">frontend/vite.config.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>@vitejs/plugin-react</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>vite</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>oxlint</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>package.json</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td>No direct outbound edge</td>
+  <td>oxlint node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>@types/react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>package.json</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td>No direct outbound edge</td>
+  <td>@types/react node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>@types/react-dom</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>package.json</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td>No direct outbound edge</td>
+  <td>@types/react-dom node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>vite</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>package.json</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>test-code-reviewer.js</code><br><small style="color:var(--muted)">frontend/test-code-reviewer.js</small><br><code>vite.config.js</code><br><small style="color:var(--muted)">frontend/vite.config.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>vite node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>@vitejs/plugin-react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>package.json</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>vite.config.js</code><br><small style="color:var(--muted)">frontend/vite.config.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>@vitejs/plugin-react node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>chat_json()</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>code_analysis_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>draft_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>judge_one()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+3 more</td>
+  <td><code>chat()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>extract_json()</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
+  <td>Supports retrieval-augmented Q&amp;A or streaming chat.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>extract_json()</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>chat_json()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>vision_worker()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>extract_json() node in backend/llm.py.</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>_build_drafter_user_prompt()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>draft_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><code>CodeFinding</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td>Builds structured prompts for model calls.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>draft_issues()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>draft_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td>draft_issues() node in backend/pipeline.py.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>frontend/package.json</code></td><td>25 nodes</td></tr>
+<tr><td><code>backend/pipeline.py</code></td><td>11 nodes</td></tr>
+<tr><td><code>frontend/.oxlintrc.json</code></td><td>6 nodes</td></tr>
+<tr><td><code>backend/graphify_tools.py</code></td><td>5 nodes</td></tr>
+<tr><td><code>backend/llm.py</code></td><td>4 nodes</td></tr>
+<tr><td><code>scripts/run_cli.py</code></td><td>3 nodes</td></tr>
+<tr><td><code>scripts/demonstrate_graphify.py</code></td><td>2 nodes</td></tr>
+<tr><td><code>tests/test_model_routing_and_pipeline.py</code></td><td>2 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x29, calls x18, imports x15, explains x10. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 4. Outputs & Docs ====== -->
+<h2 id="outputs-docs">4. Outputs &amp; Docs</h2>
+<p>Outputs &amp; Docs groups implementation around frontend, public, single, page, mostly in frontend/index.html, frontend/README.md, frontend/public/favicon.svg. This section covers 4 nodes and 2 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Outputs &amp; Docs (4 nodes, 2 edges)
+    frontend_readme_react_vite_4e8f2463("React Vite Frontend Spec<br/><small>frontend/README.md</small>")
+    frontend_index_html_shell_8dd13bee("Frontend Single-Page Entry Shell<br/><small>frontend/index.html</small>")
+    frontend_public_favicon_flame_febd992e("Kindling Flame Favicon<br/><small>frontend/public/favicon.svg</small>")
+    frontend_public_ui_icons_e3da09c6("Frontend SVG Icons Sprite<br/><small>frontend/public/icons.svg</small>")
+    frontend_index_html_shell_8dd13bee -->|references| frontend_public_favicon_flame_febd992e
+    class frontend_readme_react_vite_4e8f2463 concept;
+    class frontend_index_html_shell_8dd13bee concept;
+    class frontend_public_favicon_flame_febd992e klass;
+    class frontend_public_ui_icons_e3da09c6 klass;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>Frontend Single-Page Entry Shell</code><br><small style="color:var(--muted)">frontend/index.html</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Frontend Single-Page Entry Shell.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>React Vite Frontend Spec</code><br><small style="color:var(--muted)">frontend/README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing React Vite Frontend Spec.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>Kindling Flame Favicon</code><br><small style="color:var(--muted)">frontend/public/favicon.svg</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Kindling Flame Favicon node in frontend/public/favicon.svg.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Frontend SVG Icons Sprite</code><br><small style="color:var(--muted)">frontend/public/icons.svg</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Frontend SVG Icons Sprite node in frontend/public/icons.svg.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>frontend/README.md</code></td><td>1 nodes</td></tr>
+<tr><td><code>frontend/index.html</code></td><td>1 nodes</td></tr>
+<tr><td><code>frontend/public/favicon.svg</code></td><td>1 nodes</td></tr>
+<tr><td><code>frontend/public/icons.svg</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: references x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 5. CLI & Skill Installers ====== -->
+<h2 id="cli-skills">5. CLI &amp; Skill Installers</h2>
+<p>CLI &amp; Skill Installers groups implementation around backend, mainpy, eventspy, run, mostly in backend/main.py, backend/events.py. This section covers 41 nodes and 59 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: CLI &amp; Skill Installers (41 nodes, 59 edges)
     subgraph cli_skills_External_generated_0c226fa1["External / generated"]
         uuid_48e3462c("uuid")
         base64_8095e159("base64")
-        asyncio_4f5a0f01("asyncio")
-        json_05d97e6e("json")
         datetime_89ffad08("datetime")
         fastapi_staticfiles_ddb151bc("fastapi_staticfiles")
         fastapi_responses_a75a9e69("fastapi_responses")
         fastapi_41a1373c("fastapi")
         fastapi_middleware_cors_2b7bf539("fastapi_middleware_cors")
         backend_events_py_any_48aafb4a("Any")
+        backend_main_py_basemodel_648d2c8c("BaseModel")
+        uploadfile_40d977b5("UploadFile")
+        get_783923e5("get")
+        post_9b466094("post")
     end
     subgraph cli_skills_backend_events_py_854cc030["backend/events.py"]
         backend_events_44ee64b7("events.py")
@@ -529,53 +713,40 @@ flowchart LR
         backend_main_screenshot_scan_5be4df3d("screenshot_scan()<br/><small>backend/main.py</small>")
         backend_main_start_scan_22579783("start_scan()<br/><small>backend/main.py</small>")
     end
-    subgraph cli_skills_backend_pipeline_py_91971fab["backend/pipeline.py"]
-        backend_pipeline_run_pipeline_316a13ea("run_pipeline()<br/><small>backend/pipeline.py</small>")
-        backend_pipeline_replay_cached_47787dab("replay_cached()<br/><small>backend/pipeline.py</small>")
-    end
     backend_events_new_run_d7d4c952 -->|calls| uuid_48e3462c
     backend_main_screenshot_scan_5be4df3d -->|calls| base64_8095e159
     backend_main_screenshot_scan_5be4df3d -->|calls| backend_events_new_run_d7d4c952
     backend_main_screenshot_scan_5be4df3d -->|calls| backend_events_make_emitter_b67eb827
-    backend_main_screenshot_scan_5be4df3d -->|calls| asyncio_4f5a0f01
     backend_main_start_scan_22579783 -->|calls| backend_events_new_run_d7d4c952
-    backend_main_start_scan_22579783 -->|calls| asyncio_4f5a0f01
-    backend_main_start_scan_22579783 -->|calls| backend_pipeline_run_pipeline_316a13ea
-    backend_pipeline_replay_cached_47787dab -->|calls| asyncio_4f5a0f01
-    backend_pipeline_run_pipeline_316a13ea -->|calls| backend_events_make_emitter_b67eb827
-    backend_pipeline_run_pipeline_316a13ea -->|calls| json_05d97e6e
-    backend_pipeline_run_pipeline_316a13ea -->|calls| backend_pipeline_replay_cached_47787dab
     backend_events_44ee64b7 -->|imports| uuid_48e3462c
     backend_events_44ee64b7 -->|imports| datetime_89ffad08
-    backend_main_abdb2b1a -->|imports| asyncio_4f5a0f01
     backend_main_abdb2b1a -->|imports| backend_events_make_emitter_b67eb827
     backend_main_abdb2b1a -->|imports| backend_events_new_run_d7d4c952
-    backend_main_abdb2b1a -->|imports| backend_pipeline_run_pipeline_316a13ea
     backend_main_abdb2b1a -->|imports| base64_8095e159
-    backend_main_abdb2b1a -->|imports| json_05d97e6e
     backend_main_abdb2b1a -->|imports| backend_events_44ee64b7
     backend_main_abdb2b1a -->|imports| fastapi_staticfiles_ddb151bc
     backend_main_abdb2b1a -->|imports| fastapi_responses_a75a9e69
     backend_main_abdb2b1a -->|imports| fastapi_41a1373c
-    %% Omitted for readability: 23 nodes, 1 edges
+    backend_main_abdb2b1a -->|imports| fastapi_middleware_cors_2b7bf539
+    %% Omitted for readability: 23 nodes, 0 edges
     class uuid_48e3462c function;
     class base64_8095e159 function;
-    class asyncio_4f5a0f01 async;
-    class json_05d97e6e function;
     class datetime_89ffad08 function;
     class fastapi_staticfiles_ddb151bc api;
     class fastapi_responses_a75a9e69 api;
     class fastapi_41a1373c api;
     class fastapi_middleware_cors_2b7bf539 api;
     class backend_events_py_any_48aafb4a klass;
+    class backend_main_py_basemodel_648d2c8c klass;
+    class uploadfile_40d977b5 klass;
+    class get_783923e5 function;
+    class post_9b466094 function;
     class backend_events_44ee64b7 module;
     class backend_events_new_run_d7d4c952 function;
     class backend_events_make_emitter_b67eb827 function;
     class backend_main_abdb2b1a module;
     class backend_main_screenshot_scan_5be4df3d function;
     class backend_main_start_scan_22579783 function;
-    class backend_pipeline_run_pipeline_316a13ea function;
-    class backend_pipeline_replay_cached_47787dab function;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -623,6 +794,14 @@ flowchart LR
 </tr>
 <tr>
   <td>4</td>
+  <td><code>emit()</code><br><small style="color:var(--muted)">backend/events.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>make_emitter()</code><br><small style="color:var(--muted)">backend/events.py</small><br><code>vision_worker()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>emit() node in backend/events.py.</td>
+</tr>
+<tr>
+  <td>5</td>
   <td><code>new_run()</code><br><small style="color:var(--muted)">backend/events.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>screenshot_scan()</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>start_scan()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
@@ -630,7 +809,7 @@ flowchart LR
   <td>new_run() node in backend/events.py.</td>
 </tr>
 <tr>
-  <td>5</td>
+  <td>6</td>
   <td><code>approve_draft()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -638,15 +817,23 @@ flowchart LR
   <td>approve_draft() node in backend/main.py.</td>
 </tr>
 <tr>
-  <td>6</td>
+  <td>7</td>
   <td><code>get_configuration()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>roles()</code><br><small style="color:var(--muted)">backend/config.py</small></td>
+  <td><code>get_graph_summary()</code><br><small style="color:var(--muted)">backend/graphify_tools.py</small><br><code>roles()</code><br><small style="color:var(--muted)">backend/config.py</small></td>
   <td>Reads, resolves, or persists project configuration.</td>
 </tr>
 <tr>
-  <td>7</td>
+  <td>8</td>
+  <td><code>get_graphify_summary_endpoint()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-endpoint">API</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>get_graph_summary()</code><br><small style="color:var(--muted)">backend/graphify_tools.py</small></td>
+  <td>Builds dependency relationships and graph data.</td>
+</tr>
+<tr>
+  <td>9</td>
   <td><code>root()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -654,7 +841,7 @@ flowchart LR
   <td>root() node in backend/main.py.</td>
 </tr>
 <tr>
-  <td>8</td>
+  <td>10</td>
   <td><code>screenshot_scan()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -662,7 +849,23 @@ flowchart LR
   <td>Starts scanning or handles scan status.</td>
 </tr>
 <tr>
-  <td>9</td>
+  <td>11</td>
+  <td><code>vision_worker()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>build_repo_summary()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>emit()</code><br><small style="color:var(--muted)">backend/events.py</small><br><code>extract_json()</code><br><small style="color:var(--muted)">backend/llm.py</small><br>+3 more</td>
+  <td>vision_worker() node in backend/main.py.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>serve_graphify_interactive_view()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Builds dependency relationships and graph data.</td>
+</tr>
+<tr>
+  <td>13</td>
   <td><code>serve_root()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -670,7 +873,7 @@ flowchart LR
   <td>serve_root() node in backend/main.py.</td>
 </tr>
 <tr>
-  <td>10</td>
+  <td>14</td>
   <td><code>serve_spa()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -678,7 +881,7 @@ flowchart LR
   <td>serve_spa() node in backend/main.py.</td>
 </tr>
 <tr>
-  <td>11</td>
+  <td>15</td>
   <td><code>start_scan()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -686,7 +889,7 @@ flowchart LR
   <td>Starts scanning or handles scan status.</td>
 </tr>
 <tr>
-  <td>12</td>
+  <td>16</td>
   <td><code>stream_run_events()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
   <td><span class="tag tag-async">Async</span></td>
   <td>External entry / no inbound edge</td>
@@ -694,7 +897,7 @@ flowchart LR
   <td>stream_run_events() node in backend/main.py.</td>
 </tr>
 <tr>
-  <td>13</td>
+  <td>17</td>
   <td><code>event_generator()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -702,23 +905,7 @@ flowchart LR
   <td>event_generator() node in backend/main.py.</td>
 </tr>
 <tr>
-  <td>14</td>
-  <td><code>replay_cached()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>run_pipeline()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
-  <td><code>asyncio</code></td>
-  <td>Caches analysis results or computes cache keys.</td>
-</tr>
-<tr>
-  <td>15</td>
-  <td><code>run_pipeline()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>start_scan()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
-  <td><code>build_repo_summary()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>code_analysis_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>draft_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+8 more</td>
-  <td>run_pipeline() node in backend/pipeline.py.</td>
-</tr>
-<tr>
-  <td>16</td>
+  <td>18</td>
   <td><code>events.py</code><br><small style="color:var(--muted)">backend/events.py</small></td>
   <td><span class="tag tag-class">Module</span></td>
   <td><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>pipeline.py</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
@@ -726,7 +913,7 @@ flowchart LR
   <td>Module file in backend/events.py.</td>
 </tr>
 <tr>
-  <td>17</td>
+  <td>19</td>
   <td><code>Any</code><br><small style="color:var(--muted)"></small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
@@ -734,15 +921,15 @@ flowchart LR
   <td>Any node in project.</td>
 </tr>
 <tr>
-  <td>18</td>
+  <td>20</td>
   <td><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small></td>
   <td><span class="tag tag-class">Module</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>__init__.py</code><br><small style="color:var(--muted)">backend/__init__.py</small><br><code>asyncio</code><br><code>base64</code><br>+24 more</td>
+  <td><code>__init__.py</code><br><small style="color:var(--muted)">backend/__init__.py</small><br><code>asyncio</code><br><code>base64</code><br>+26 more</td>
   <td>Module file in backend/main.py.</td>
 </tr>
 <tr>
-  <td>19</td>
+  <td>21</td>
   <td><code>BaseModel</code><br><small style="color:var(--muted)"></small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
@@ -750,7 +937,7 @@ flowchart LR
   <td>BaseModel node in project.</td>
 </tr>
 <tr>
-  <td>20</td>
+  <td>22</td>
   <td><code>get</code><br><small style="color:var(--muted)"></small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -758,7 +945,7 @@ flowchart LR
   <td>get node in project.</td>
 </tr>
 <tr>
-  <td>21</td>
+  <td>23</td>
   <td><code>post</code><br><small style="color:var(--muted)"></small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -766,7 +953,7 @@ flowchart LR
   <td>post node in project.</td>
 </tr>
 <tr>
-  <td>22</td>
+  <td>24</td>
   <td><code>UploadFile</code><br><small style="color:var(--muted)"></small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
@@ -774,7 +961,7 @@ flowchart LR
   <td>UploadFile node in project.</td>
 </tr>
 <tr>
-  <td>23</td>
+  <td>25</td>
   <td><code>Returns an asynchronous emitter function that appends sequence-stamped events.</code><br><small style="color:var(--muted)">backend/events.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -782,7 +969,7 @@ flowchart LR
   <td>Design note for Returns an asynchronous emitter function that appends sequence-stamped events..</td>
 </tr>
 <tr>
-  <td>24</td>
+  <td>26</td>
   <td><code>Initializes a new run entry and returns its unique run_id.</code><br><small style="color:var(--muted)">backend/events.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -790,7 +977,15 @@ flowchart LR
   <td>Design note for Initializes a new run entry and returns its unique run_id..</td>
 </tr>
 <tr>
-  <td>25</td>
+  <td>27</td>
+  <td><code>Streams pipeline events in real-time using Server-Sent Events (SSE).</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Streams pipeline events in real-time using Server-Sent Events (SSE)..</td>
+</tr>
+<tr>
+  <td>28</td>
   <td><code>Converts approved draft into a formatted GitHub issue and posts to TARGET_REPO.</code><br><small style="color:var(--muted)">backend/main.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -798,7 +993,7 @@ flowchart LR
   <td>Design note for Converts approved draft into a formatted GitHub issue and posts to TARGET_REPO..</td>
 </tr>
 <tr>
-  <td>26</td>
+  <td>29</td>
   <td><code>Multimodal Vision endpoint: converts a bug screenshot into a structured issue…</code><br><small style="color:var(--muted)">backend/main.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
@@ -806,36 +1001,12 @@ flowchart LR
   <td>Design note for Multimodal Vision endpoint: converts a bug screenshot into a structured issue….</td>
 </tr>
 <tr>
-  <td>27</td>
+  <td>30</td>
   <td><code>Root status endpoint directing visitors to frontend or interactive docs.</code><br><small style="color:var(--muted)">backend/main.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
   <td>Design note for Root status endpoint directing visitors to frontend or interactive docs..</td>
-</tr>
-<tr>
-  <td>28</td>
-  <td><code>Returns active crew configuration, assigned open models, target repo, and demo…</code><br><small style="color:var(--muted)">backend/main.py</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Design note for Returns active crew configuration, assigned open models, target repo, and demo….</td>
-</tr>
-<tr>
-  <td>29</td>
-  <td><code>Initiates an asynchronous repository scan run and returns run_id for SSE…</code><br><small style="color:var(--muted)">backend/main.py</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Design note for Initiates an asynchronous repository scan run and returns run_id for SSE….</td>
-</tr>
-<tr>
-  <td>30</td>
-  <td><code>Streams pipeline events in real-time using Server-Sent Events (SSE).</code><br><small style="color:var(--muted)">backend/main.py</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Design note for Streams pipeline events in real-time using Server-Sent Events (SSE)..</td>
 </tr>
 </table>
 
@@ -844,20 +1015,19 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>backend/main.py</code></td><td>18 nodes</td></tr>
-<tr><td><code>backend/events.py</code></td><td>5 nodes</td></tr>
-<tr><td><code>backend/pipeline.py</code></td><td>4 nodes</td></tr>
+      <tr><td><code>backend/main.py</code></td><td>23 nodes</td></tr>
+<tr><td><code>backend/events.py</code></td><td>6 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x13, references x12, calls x12, explains x10. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x16, references x14, explains x10, imports x6. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
-<!-- ====== 4. Ingestion & Updates ====== -->
-<h2 id="ingest-cache-update">4. Ingestion &amp; Updates</h2>
+<!-- ====== 6. Ingestion & Updates ====== -->
+<h2 id="ingest-cache-update">6. Ingestion &amp; Updates</h2>
 <p>Ingestion &amp; Updates groups implementation around github, toolspy, backend, repo, mostly in backend/github_tools.py. This section covers 26 nodes and 51 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
@@ -1172,184 +1342,14 @@ flowchart LR
 </div>
 <hr>
 
-<!-- ====== 5. Security & Global Graph ====== -->
-<h2 id="security-global">5. Security &amp; Global Graph</h2>
-<p>Security &amp; Global Graph groups implementation around demo, readmemd, seed, repomd, mostly in README.md, scripts/seed_demo_repo.md. This section covers 11 nodes and 9 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<!-- ====== 7. Tests & Fixtures ====== -->
+<h2 id="tests-fixtures">7. Tests &amp; Fixtures</h2>
+<p>Tests &amp; Fixtures groups implementation around pipelinepy, test, model, tests, mostly in tests/test_model_routing_and_pipeline.py, backend/pipeline.py, backend/schemas.py. This section covers 72 nodes and 147 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Security &amp; Global Graph (11 nodes, 9 edges)
-    subgraph security_global_README_md_bb820159["README.md"]
-        readme_kindling_a6b81606("🔥 Kindling<br/><small>README.md</small>")
-        readme_f78a71af("README.md")
-        readme_quick_start_windows_powershell_b87eecf6("🚀 Quick Start (Windows PowerShell)<br/><small>README.md</small>")
-        readme_key_features_fae64a16("✨ Key Features<br/><small>README.md</small>")
-        readme_1_clone_set_up_python_environment_d2680054("1. Clone &amp; Set Up Python Environment<br/><small>README.md</small>")
-        readme_the_open_weight_model_crew_967bcccb("🧠 The Open-Weight Model Crew<br/><small>README.md</small>")
-    end
-    subgraph security_global_scripts_seed_demo_repo_md_bec08f8f["scripts/seed_demo_repo.md"]
-        scripts_seed_demo_repo_seed_demo_repo_guide_dbd1c593("Seed Demo Repo Guide<br/><small>scripts/seed_demo_repo.md</small>")
-        scripts_seed_demo_repo_f212366c("seed_demo_repo.md")
-        scripts_seed_demo_repo_recommended_demo_repo_str_364b33f4("Recommended Demo Repo Structure<br/><small>scripts/seed_demo_repo.md</small>")
-        scripts_seed_demo_repo_recommended_github_issues_1993828d("Recommended GitHub Issues to Create in...<br/><small>scripts/seed_demo_repo.md</small>")
-        scripts_seed_demo_repo_ui_bug_for_screenshot_dem_7627c06d("UI Bug for Screenshot Demo<br/><small>scripts/seed_demo_repo.md</small>")
-    end
-    readme_f78a71af -->|contains| readme_kindling_a6b81606
-    readme_kindling_a6b81606 -->|contains| readme_key_features_fae64a16
-    readme_kindling_a6b81606 -->|contains| readme_quick_start_windows_powershell_b87eecf6
-    readme_kindling_a6b81606 -->|contains| readme_the_open_weight_model_crew_967bcccb
-    readme_quick_start_windows_powershell_b87eecf6 -->|contains| readme_1_clone_set_up_python_environment_d2680054
-    scripts_seed_demo_repo_f212366c -->|contains| scripts_seed_demo_repo_seed_demo_repo_guide_dbd1c593
-    scripts_seed_demo_repo_seed_demo_repo_guide_dbd1c593 -->|contains| scripts_seed_demo_repo_recommended_github_issues_1993828d
-    scripts_seed_demo_repo_seed_demo_repo_guide_dbd1c593 -->|contains| scripts_seed_demo_repo_ui_bug_for_screenshot_dem_7627c06d
-    scripts_seed_demo_repo_seed_demo_repo_guide_dbd1c593 -->|contains| scripts_seed_demo_repo_recommended_demo_repo_str_364b33f4
-    class readme_kindling_a6b81606 concept;
-    class readme_f78a71af concept;
-    class readme_quick_start_windows_powershell_b87eecf6 concept;
-    class readme_key_features_fae64a16 concept;
-    class readme_1_clone_set_up_python_environment_d2680054 concept;
-    class readme_the_open_weight_model_crew_967bcccb concept;
-    class scripts_seed_demo_repo_seed_demo_repo_guide_dbd1c593 concept;
-    class scripts_seed_demo_repo_f212366c concept;
-    class scripts_seed_demo_repo_recommended_demo_repo_str_364b33f4 concept;
-    class scripts_seed_demo_repo_recommended_github_issues_1993828d concept;
-    class scripts_seed_demo_repo_ui_bug_for_screenshot_dem_7627c06d concept;
-    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
-    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
-    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
-    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
-    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
-    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
-    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
-    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
-    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
-</div>
-
-<h3>Call Details</h3>
-<table class="call-table">
-<tr>
-  <th style="width:5%">#</th>
-  <th style="width:28%">Node</th>
-  <th style="width:10%">Type</th>
-  <th style="width:17%">Caller</th>
-  <th style="width:20%">Callees</th>
-  <th style="width:20%">Description</th>
-</tr>
-<tr>
-  <td>1</td>
-  <td><code>README.md</code><br><small style="color:var(--muted)">README.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing README.md.</td>
-</tr>
-<tr>
-  <td>2</td>
-  <td><code>1. Clone &amp; Set Up Python Environment</code><br><small style="color:var(--muted)">README.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing 1. Clone &amp; Set Up Python Environment.</td>
-</tr>
-<tr>
-  <td>3</td>
-  <td><code>✨ Key Features</code><br><small style="color:var(--muted)">README.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing ✨ Key Features.</td>
-</tr>
-<tr>
-  <td>4</td>
-  <td><code>🔥 Kindling</code><br><small style="color:var(--muted)">README.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing 🔥 Kindling.</td>
-</tr>
-<tr>
-  <td>5</td>
-  <td><code>🚀 Quick Start (Windows PowerShell)</code><br><small style="color:var(--muted)">README.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing 🚀 Quick Start (Windows PowerShell).</td>
-</tr>
-<tr>
-  <td>6</td>
-  <td><code>🧠 The Open-Weight Model Crew</code><br><small style="color:var(--muted)">README.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing 🧠 The Open-Weight Model Crew.</td>
-</tr>
-<tr>
-  <td>7</td>
-  <td><code>seed_demo_repo.md</code><br><small style="color:var(--muted)">scripts/seed_demo_repo.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing seed_demo_repo.md.</td>
-</tr>
-<tr>
-  <td>8</td>
-  <td><code>Recommended Demo Repo Structure</code><br><small style="color:var(--muted)">scripts/seed_demo_repo.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing Recommended Demo Repo Structure.</td>
-</tr>
-<tr>
-  <td>9</td>
-  <td><code>Recommended GitHub Issues to Create in Advance</code><br><small style="color:var(--muted)">scripts/seed_demo_repo.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing Recommended GitHub Issues to Create in Advance.</td>
-</tr>
-<tr>
-  <td>10</td>
-  <td><code>Seed Demo Repo Guide</code><br><small style="color:var(--muted)">scripts/seed_demo_repo.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing Seed Demo Repo Guide.</td>
-</tr>
-<tr>
-  <td>11</td>
-  <td><code>UI Bug for Screenshot Demo</code><br><small style="color:var(--muted)">scripts/seed_demo_repo.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing UI Bug for Screenshot Demo.</td>
-</tr>
-</table>
-
-<div class="grid">
-  <div class="card">
-    <h4>Key Files</h4>
-    <table style="width:100%;font-size:0.85rem;">
-      <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>README.md</code></td><td>6 nodes</td></tr>
-<tr><td><code>scripts/seed_demo_repo.md</code></td><td>5 nodes</td></tr>
-    </table>
-  </div>
-  <div class="card">
-    <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x9. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
-  </div>
-</div>
-<hr>
-
-<!-- ====== 6. Tests & Fixtures ====== -->
-<h2 id="tests-fixtures">6. Tests &amp; Fixtures</h2>
-<p>Tests &amp; Fixtures groups implementation around backend, pipelinepy, model, test, mostly in tests/test_model_routing_and_pipeline.py, backend/pipeline.py, backend/schemas.py. This section covers 80 nodes and 174 internal edges; the diagram shows only representative relationships to stay readable.</p>
-
-<div class="mermaid">
-%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
-flowchart LR
-    %% Section: Tests &amp; Fixtures (80 nodes, 174 edges)
+    %% Section: Tests &amp; Fixtures (72 nodes, 147 edges)
     subgraph tests_fixtures_tests_test_model_routing_and_pipe_140c2191["tests/test_model_routing_and_pipeline.py"]
         tests_test_model_routing_and_pipeline_testmodelr_9713dc9b("TestModelRoutingAndPipeline<br/><small>tests/test_model_routing_and_pipeline.py</small>")
         tests_test_model_routing_and_pipeline_c26677d2("test_model_routing_and_pipeline.py")
@@ -1358,41 +1358,42 @@ flowchart LR
         tests_test_model_routing_and_pipeline_testmodelr_27ac1714("test_emitted_event_labels_and_models_used()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
         tests_test_model_routing_and_pipeline_testmodelr_94a90954("test_qwen_code_analysis_called_with_source_context()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
         tests_test_model_routing_and_pipeline_testmodelr_5b2e70f4("tearDown()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
+        tests_test_model_routing_and_pipeline_testmodelr_a5c7424b("test_graphify_context_injected_into_code_analysis()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
         tests_test_model_routing_and_pipeline_testmodelr_3a0861d2("test_empty_repository_does_not_crash_code_analysis()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
         tests_test_model_routing_and_pipeline_testmodelr_59ced69f("test_model_routing_resolution()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
         tests_test_model_routing_and_pipeline_testmodelr_b60f1949("test_drafter_selects_drafter_model()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
         tests_test_model_routing_and_pipeline_testmodelr_fd784881("test_judge_selects_judge_model()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
-        tests_test_model_routing_and_pipeline_testmodelr_1c5c2df5("test_rewrite_selects_rewrite_model()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
+    end
+    subgraph tests_fixtures_backend_pipeline_py_a6ba7631["backend/pipeline.py"]
+        backend_pipeline_a0eea993("pipeline.py")
+        backend_pipeline_process_drafts_51f1e43d("process_drafts()<br/><small>backend/pipeline.py</small>")
     end
     subgraph tests_fixtures_backend_schemas_py_bb1d97eb["backend/schemas.py"]
         backend_schemas_draftlist_30cee0bb("DraftList<br/><small>backend/schemas.py</small>")
         backend_schemas_draftlist_cap_to_three_55000d93("cap_to_three()<br/><small>backend/schemas.py</small>")
     end
-    backend_llm_51430772("llm.py")
-    backend_pipeline_a0eea993("pipeline.py")
-    scripts_list_models_02d90a66("list_models.py")
-    scripts_run_cli_89dc9f80("run_cli.py")
+    frontend_src_app_7da8908b("App.jsx")
+    frontend_src_main_c1980e55("main.jsx")
     backend_schemas_draftlist_30cee0bb -->|method| backend_schemas_draftlist_cap_to_three_55000d93
     tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_ea204aaa
     tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_cc3ee1e7
     tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_27ac1714
     tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_94a90954
     tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_5b2e70f4
+    tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_a5c7424b
     tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_3a0861d2
     tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_59ced69f
     tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_b60f1949
     tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_fd784881
-    tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_1c5c2df5
     tests_test_model_routing_and_pipeline_testmodelr_b60f1949 -->|calls| backend_schemas_draftlist_30cee0bb
+    tests_test_model_routing_and_pipeline_testmodelr_27ac1714 -->|calls| backend_pipeline_process_drafts_51f1e43d
+    tests_test_model_routing_and_pipeline_testmodelr_cc3ee1e7 -->|calls| backend_pipeline_process_drafts_51f1e43d
     backend_pipeline_a0eea993 -->|imports| backend_schemas_draftlist_30cee0bb
-    backend_pipeline_a0eea993 -->|imports| backend_llm_51430772
     tests_test_model_routing_and_pipeline_c26677d2 -->|imports| backend_schemas_draftlist_30cee0bb
-    tests_test_model_routing_and_pipeline_c26677d2 -->|imports| backend_llm_51430772
     tests_test_model_routing_and_pipeline_c26677d2 -->|imports| backend_pipeline_a0eea993
-    scripts_list_models_02d90a66 -->|imports| backend_llm_51430772
-    scripts_run_cli_89dc9f80 -->|imports| backend_pipeline_a0eea993
+    frontend_src_main_c1980e55 -->|imports| frontend_src_app_7da8908b
     tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|uses| backend_schemas_draftlist_30cee0bb
-    %% Omitted for readability: 62 nodes, 0 edges
+    %% Omitted for readability: 54 nodes, 0 edges
     class tests_test_model_routing_and_pipeline_testmodelr_9713dc9b test;
     class tests_test_model_routing_and_pipeline_c26677d2 test;
     class tests_test_model_routing_and_pipeline_testmodelr_ea204aaa test;
@@ -1400,17 +1401,17 @@ flowchart LR
     class tests_test_model_routing_and_pipeline_testmodelr_27ac1714 test;
     class tests_test_model_routing_and_pipeline_testmodelr_94a90954 test;
     class tests_test_model_routing_and_pipeline_testmodelr_5b2e70f4 test;
+    class tests_test_model_routing_and_pipeline_testmodelr_a5c7424b test;
     class tests_test_model_routing_and_pipeline_testmodelr_3a0861d2 test;
     class tests_test_model_routing_and_pipeline_testmodelr_59ced69f test;
     class tests_test_model_routing_and_pipeline_testmodelr_b60f1949 test;
     class tests_test_model_routing_and_pipeline_testmodelr_fd784881 test;
-    class tests_test_model_routing_and_pipeline_testmodelr_1c5c2df5 test;
+    class backend_pipeline_a0eea993 module;
+    class backend_pipeline_process_drafts_51f1e43d function;
     class backend_schemas_draftlist_30cee0bb klass;
     class backend_schemas_draftlist_cap_to_three_55000d93 function;
-    class backend_llm_51430772 module;
-    class backend_pipeline_a0eea993 module;
-    class scripts_list_models_02d90a66 module;
-    class scripts_run_cli_89dc9f80 entry;
+    class frontend_src_app_7da8908b ui;
+    class frontend_src_main_c1980e55 ui;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -1444,7 +1445,7 @@ flowchart LR
   <td>2</td>
   <td><code>CodeAnalysisResult</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
-  <td><code>code_analysis_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>pipeline.py</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>test_model_routing_and_pipeline.py</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small><br>+2 more</td>
+  <td><code>code_analysis_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>pipeline.py</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>test_graphify_context_injected_into_code_analysis()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small><br>+3 more</td>
   <td>No direct outbound edge</td>
   <td>Orchestrates analysis and returns structured documentation data.</td>
 </tr>
@@ -1452,7 +1453,7 @@ flowchart LR
   <td>3</td>
   <td><code>CodeFinding</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
-  <td><code>_build_drafter_user_prompt()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>code_analysis_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>draft_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+4 more</td>
+  <td><code>_build_drafter_user_prompt()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>code_analysis_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>draft_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+5 more</td>
   <td>No direct outbound edge</td>
   <td>CodeFinding node in backend/schemas.py.</td>
 </tr>
@@ -1509,19 +1510,27 @@ flowchart LR
   <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
   <td><span class="tag tag-func">Test</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>CodeAnalysisResult</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>CodeFinding</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small><br>+12 more</td>
+  <td><code>CodeAnalysisResult</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>CodeFinding</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small><br>+14 more</td>
   <td>Verifies imports, entry points, or version behavior.</td>
 </tr>
 <tr>
   <td>11</td>
-  <td><code>code_analysis_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><code>_get_model_for_role()</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
-  <td><code>run_pipeline()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>test_empty_repository_does_not_crash_code_analysis()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small><br><code>test_qwen_code_analysis_called_with_source_context()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
-  <td><code>chat_json()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>CodeAnalysisResult</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>CodeFinding</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
-  <td>Orchestrates analysis and returns structured documentation data.</td>
+  <td><code>chat()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>test_drafter_selects_drafter_model()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small><br><code>test_judge_selects_judge_model()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small><br>+2 more</td>
+  <td>No direct outbound edge</td>
+  <td>_get_model_for_role() node in backend/llm.py.</td>
 </tr>
 <tr>
   <td>12</td>
+  <td><code>code_analysis_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>run_pipeline()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>test_empty_repository_does_not_crash_code_analysis()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small><br><code>test_graphify_context_injected_into_code_analysis()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small><br>+1 more</td>
+  <td><code>chat_json()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>CodeAnalysisResult</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>CodeFinding</code><br><small style="color:var(--muted)">backend/schemas.py</small><br>+1 more</td>
+  <td>Orchestrates analysis and returns structured documentation data.</td>
+</tr>
+<tr>
+  <td>13</td>
   <td><code>judge_one()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td><code>process_drafts()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>test_judge_selects_judge_model()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
@@ -1529,7 +1538,7 @@ flowchart LR
   <td>judge_one() node in backend/pipeline.py.</td>
 </tr>
 <tr>
-  <td>13</td>
+  <td>14</td>
   <td><code>process_drafts()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td><code>main()</code><br><small style="color:var(--muted)">scripts/run_cli.py</small><br><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>run_pipeline()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+3 more</td>
@@ -1537,7 +1546,7 @@ flowchart LR
   <td>process_drafts() node in backend/pipeline.py.</td>
 </tr>
 <tr>
-  <td>14</td>
+  <td>15</td>
   <td><code>passthrough()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
@@ -1545,7 +1554,7 @@ flowchart LR
   <td>passthrough() node in backend/pipeline.py.</td>
 </tr>
 <tr>
-  <td>15</td>
+  <td>16</td>
   <td><code>rewrite_one()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td><code>process_drafts()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>test_rewrite_selects_rewrite_model()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
@@ -1553,7 +1562,7 @@ flowchart LR
   <td>rewrite_one() node in backend/pipeline.py.</td>
 </tr>
 <tr>
-  <td>16</td>
+  <td>17</td>
   <td><code>.cap_to_three()</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td><code>DraftList</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
@@ -1561,7 +1570,7 @@ flowchart LR
   <td>.cap_to_three() node in backend/schemas.py.</td>
 </tr>
 <tr>
-  <td>17</td>
+  <td>18</td>
   <td><code>.setUp()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
   <td><span class="tag tag-func">Test</span></td>
   <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
@@ -1569,7 +1578,7 @@ flowchart LR
   <td>.setUp() node in tests/test_model_routing_and_pipeline.py.</td>
 </tr>
 <tr>
-  <td>18</td>
+  <td>19</td>
   <td><code>.tearDown()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
   <td><span class="tag tag-func">Test</span></td>
   <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
@@ -1577,7 +1586,7 @@ flowchart LR
   <td>.tearDown() node in tests/test_model_routing_and_pipeline.py.</td>
 </tr>
 <tr>
-  <td>19</td>
+  <td>20</td>
   <td><code>.test_drafter_selects_drafter_model()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
   <td><span class="tag tag-func">Test</span></td>
   <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
@@ -1585,7 +1594,7 @@ flowchart LR
   <td>Verifies imports, entry points, or version behavior.</td>
 </tr>
 <tr>
-  <td>20</td>
+  <td>21</td>
   <td><code>.test_emitted_event_labels_and_models_used()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
   <td><span class="tag tag-func">Test</span></td>
   <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
@@ -1593,7 +1602,7 @@ flowchart LR
   <td>Verifies imports, entry points, or version behavior.</td>
 </tr>
 <tr>
-  <td>21</td>
+  <td>22</td>
   <td><code>mock_emit()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
   <td><span class="tag tag-func">Test</span></td>
   <td>External entry / no inbound edge</td>
@@ -1601,7 +1610,7 @@ flowchart LR
   <td>mock_emit() node in tests/test_model_routing_and_pipeline.py.</td>
 </tr>
 <tr>
-  <td>22</td>
+  <td>23</td>
   <td><code>.test_empty_repository_does_not_crash_code_analysis()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
   <td><span class="tag tag-func">Test</span></td>
   <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
@@ -1609,16 +1618,8 @@ flowchart LR
   <td>Orchestrates analysis and returns structured documentation data.</td>
 </tr>
 <tr>
-  <td>23</td>
-  <td><code>.test_judge_selects_judge_model()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
-  <td><span class="tag tag-func">Test</span></td>
-  <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
-  <td><code>_get_model_for_role()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>judge_one()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+1 more</td>
-  <td>Verifies imports, entry points, or version behavior.</td>
-</tr>
-<tr>
   <td>24</td>
-  <td><code>.test_qwen_code_analysis_called_with_source_context()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><code>.test_graphify_context_injected_into_code_analysis()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
   <td><span class="tag tag-func">Test</span></td>
   <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
   <td><code>code_analysis_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>CodeAnalysisResult</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>CodeFinding</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
@@ -1626,6 +1627,30 @@ flowchart LR
 </tr>
 <tr>
   <td>25</td>
+  <td><code>.test_judge_selects_judge_model()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><code>_get_model_for_role()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>judge_one()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+1 more</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>.test_model_routing_resolution()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><code>_get_model_for_role()</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>.test_qwen_code_analysis_called_with_source_context()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><code>code_analysis_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>CodeAnalysisResult</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>CodeFinding</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td>Orchestrates analysis and returns structured documentation data.</td>
+</tr>
+<tr>
+  <td>28</td>
   <td><code>.test_rewrite_failure_falls_back_to_original_draft()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
   <td><span class="tag tag-func">Test</span></td>
   <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
@@ -1633,7 +1658,7 @@ flowchart LR
   <td>Verifies imports, entry points, or version behavior.</td>
 </tr>
 <tr>
-  <td>26</td>
+  <td>29</td>
   <td><code>fail_rewrite()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
   <td><span class="tag tag-func">Test</span></td>
   <td><code>test_rewrite_failure_falls_back_to_original_draft()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
@@ -1641,36 +1666,12 @@ flowchart LR
   <td>fail_rewrite() node in tests/test_model_routing_and_pipeline.py.</td>
 </tr>
 <tr>
-  <td>27</td>
+  <td>30</td>
   <td><code>mock_emit()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
   <td><span class="tag tag-func">Test</span></td>
   <td><code>test_emitted_event_labels_and_models_used()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small><br><code>test_rewrite_failure_falls_back_to_original_draft()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
   <td>No direct outbound edge</td>
   <td>mock_emit() node in tests/test_model_routing_and_pipeline.py.</td>
-</tr>
-<tr>
-  <td>28</td>
-  <td><code>.test_rewrite_selects_rewrite_model()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
-  <td><span class="tag tag-func">Test</span></td>
-  <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
-  <td><code>_get_model_for_role()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>JudgeResult</code><br><small style="color:var(--muted)">backend/schemas.py</small><br>+1 more</td>
-  <td>Verifies imports, entry points, or version behavior.</td>
-</tr>
-<tr>
-  <td>29</td>
-  <td><code>pipeline.py</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
-  <td><span class="tag tag-class">Module</span></td>
-  <td><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>run_cli.py</code><br><small style="color:var(--muted)">scripts/run_cli.py</small><br><code>test_model_routing_and_pipeline.py</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
-  <td><code>__init__.py</code><br><small style="color:var(--muted)">backend/__init__.py</small><br><code>asyncio</code><br><code>build_repo_summary()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br>+21 more</td>
-  <td>Module file in backend/pipeline.py.</td>
-</tr>
-<tr>
-  <td>30</td>
-  <td><code>BaseModel</code><br><small style="color:var(--muted)"></small></td>
-  <td><span class="tag tag-class">Class</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>BaseModel node in project.</td>
 </tr>
 </table>
 
@@ -1679,42 +1680,94 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>tests/test_model_routing_and_pipeline.py</code></td><td>23 nodes</td></tr>
+      <tr><td><code>tests/test_model_routing_and_pipeline.py</code></td><td>25 nodes</td></tr>
 <tr><td><code>backend/pipeline.py</code></td><td>11 nodes</td></tr>
 <tr><td><code>backend/schemas.py</code></td><td>10 nodes</td></tr>
-<tr><td><code>backend/llm.py</code></td><td>8 nodes</td></tr>
-<tr><td><code>backend/config.py</code></td><td>3 nodes</td></tr>
-<tr><td><code>scripts/list_models.py</code></td><td>3 nodes</td></tr>
-<tr><td><code>scripts/run_cli.py</code></td><td>3 nodes</td></tr>
 <tr><td><code>backend/prompts.py</code></td><td>2 nodes</td></tr>
+<tr><td><code>frontend/package.json</code></td><td>2 nodes</td></tr>
+<tr><td><code>frontend/src/App.jsx</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/components/CodeFindingsPanel.jsx</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/components/IssueCard.jsx</code></td><td>2 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: calls x35, imports x34, contains x25, imports x23. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: calls x31, imports x25, contains x21, imports x17. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
-<!-- ====== 7. Frontend Readmemd React ====== -->
-<h2 id="frontend-readmemd-react">7. Frontend Readmemd React</h2>
-<p>Frontend Readmemd React groups implementation around frontend, readmemd, react, expanding, mostly in frontend/README.md. This section covers 4 nodes and 3 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<!-- ====== 8. Configuration and Model Role Routing ====== -->
+<h2 id="configuration-and-model-role-routing">8. Configuration and Model Role Routing</h2>
+<p>Configuration and Model Role Routing groups implementation around backend, llmpy, configpy, list, mostly in backend/llm.py, backend/config.py, scripts/list_models.py. This section covers 22 nodes and 31 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Frontend Readmemd React (4 nodes, 3 edges)
-    frontend_readme_react_vite_4e8f2463("React + Vite<br/><small>frontend/README.md</small>")
-    frontend_readme_12075ecf("frontend/README.md")
-    frontend_readme_react_compiler_dae8ab5c("React Compiler<br/><small>frontend/README.md</small>")
-    frontend_readme_expanding_the_oxlint_configurati_79e1d063("Expanding the Oxlint configuration<br/><small>frontend/README.md</small>")
-    frontend_readme_12075ecf -->|contains| frontend_readme_react_vite_4e8f2463
-    frontend_readme_react_vite_4e8f2463 -->|contains| frontend_readme_react_compiler_dae8ab5c
-    frontend_readme_react_vite_4e8f2463 -->|contains| frontend_readme_expanding_the_oxlint_configurati_79e1d063
-    class frontend_readme_react_vite_4e8f2463 concept;
-    class frontend_readme_12075ecf concept;
-    class frontend_readme_react_compiler_dae8ab5c concept;
-    class frontend_readme_expanding_the_oxlint_configurati_79e1d063 concept;
+    %% Section: Configuration and Model Role Routing (22 nodes, 31 edges)
+    subgraph configuration_and_model_role_routing_External_ge_fccc46aa["External / generated"]
+        time_714eea0f("time")
+        os_999a3419("os")
+        dotenv_4de95cba("dotenv")
+        logging_42f7b07d("logging")
+        openai_7d3bbb5c("openai")
+        asyncopenai_4a362ce1("AsyncOpenAI")
+    end
+    subgraph configuration_and_model_role_routing_backend_con_908a4f29["backend/config.py"]
+        backend_config_roles_9601d4d0("roles()<br/><small>backend/config.py</small>")
+        backend_config_b9e47c5e("config.py")
+        backend_config_reload_2382d918("reload()<br/><small>backend/config.py</small>")
+        backend_config_rationale_41_d39e5edb("Reloads environment variables from .env...<br/><small>backend/config.py</small>")
+    end
+    subgraph configuration_and_model_role_routing_backend_llm_3e89fb38["backend/llm.py"]
+        backend_llm_51430772("llm.py")
+        backend_llm_chat_be995084("chat()<br/><small>backend/llm.py</small>")
+        backend_llm_strip_thinking_tags_b4cc2b44("_strip_thinking_tags()<br/><small>backend/llm.py</small>")
+        backend_llm_get_client_23010e47("get_client()<br/><small>backend/llm.py</small>")
+    end
+    subgraph configuration_and_model_role_routing_scripts_lis_3a70361f["scripts/list_models.py"]
+        scripts_list_models_02d90a66("list_models.py")
+        scripts_list_models_main_ac3e0964("main()<br/><small>scripts/list_models.py</small>")
+        scripts_list_models_test_model_94ea4520("test_model()<br/><small>scripts/list_models.py</small>")
+    end
+    backend_init_303f2ebd("__init__.py")
+    backend_config_roles_9601d4d0 -->|calls| backend_config_reload_2382d918
+    backend_llm_chat_be995084 -->|calls| backend_llm_strip_thinking_tags_b4cc2b44
+    backend_llm_chat_be995084 -->|calls| backend_llm_get_client_23010e47
+    scripts_list_models_main_ac3e0964 -->|calls| backend_llm_get_client_23010e47
+    scripts_list_models_main_ac3e0964 -->|calls| scripts_list_models_test_model_94ea4520
+    scripts_list_models_test_model_94ea4520 -->|calls| time_714eea0f
+    backend_config_b9e47c5e -->|imports| os_999a3419
+    backend_config_b9e47c5e -->|imports| dotenv_4de95cba
+    backend_llm_51430772 -->|imports| time_714eea0f
+    backend_llm_51430772 -->|imports| logging_42f7b07d
+    backend_llm_51430772 -->|imports| openai_7d3bbb5c
+    backend_llm_51430772 -->|imports| backend_init_303f2ebd
+    backend_llm_51430772 -->|imports| backend_config_b9e47c5e
+    scripts_list_models_02d90a66 -->|imports| backend_llm_get_client_23010e47
+    scripts_list_models_02d90a66 -->|imports| time_714eea0f
+    scripts_list_models_02d90a66 -->|imports| backend_init_303f2ebd
+    scripts_list_models_02d90a66 -->|imports| backend_llm_51430772
+    scripts_list_models_02d90a66 -->|imports| backend_config_b9e47c5e
+    %% Omitted for readability: 4 nodes, 0 edges
+    class time_714eea0f function;
+    class os_999a3419 function;
+    class dotenv_4de95cba function;
+    class logging_42f7b07d function;
+    class openai_7d3bbb5c function;
+    class asyncopenai_4a362ce1 async;
+    class backend_config_roles_9601d4d0 function;
+    class backend_config_b9e47c5e module;
+    class backend_config_reload_2382d918 function;
+    class backend_config_rationale_41_d39e5edb concept;
+    class backend_llm_51430772 module;
+    class backend_llm_chat_be995084 function;
+    class backend_llm_strip_thinking_tags_b4cc2b44 function;
+    class backend_llm_get_client_23010e47 entry;
+    class scripts_list_models_02d90a66 module;
+    class scripts_list_models_main_ac3e0964 function;
+    class scripts_list_models_test_model_94ea4520 test;
+    class backend_init_303f2ebd module;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -1738,35 +1791,179 @@ flowchart LR
 </tr>
 <tr>
   <td>1</td>
-  <td><code>frontend/README.md</code><br><small style="color:var(--muted)">frontend/README.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>reload()</code><br><small style="color:var(--muted)">backend/config.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>roles()</code><br><small style="color:var(--muted)">backend/config.py</small></td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing frontend/README.md.</td>
+  <td>reload() node in backend/config.py.</td>
 </tr>
 <tr>
   <td>2</td>
-  <td><code>Expanding the Oxlint configuration</code><br><small style="color:var(--muted)">frontend/README.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing Expanding the Oxlint configuration.</td>
+  <td><code>roles()</code><br><small style="color:var(--muted)">backend/config.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>get_configuration()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><code>reload()</code><br><small style="color:var(--muted)">backend/config.py</small></td>
+  <td>roles() node in backend/config.py.</td>
 </tr>
 <tr>
   <td>3</td>
-  <td><code>React Compiler</code><br><small style="color:var(--muted)">frontend/README.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing React Compiler.</td>
+  <td><code>chat()</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>chat_json()</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
+  <td><code>_get_model_for_role()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>_strip_thinking_tags()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>get_client()</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
+  <td>Supports retrieval-augmented Q&amp;A or streaming chat.</td>
 </tr>
 <tr>
   <td>4</td>
-  <td><code>React + Vite</code><br><small style="color:var(--muted)">frontend/README.md</small></td>
+  <td><code>get_client()</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
+  <td><span class="tag tag-cmd">Entry</span></td>
+  <td><code>chat()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>list_models.py</code><br><small style="color:var(--muted)">scripts/list_models.py</small><br><code>main()</code><br><small style="color:var(--muted)">scripts/list_models.py</small><br>+1 more</td>
+  <td>No direct outbound edge</td>
+  <td>get_client() node in backend/llm.py.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>_strip_thinking_tags()</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>chat()</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>_strip_thinking_tags() node in backend/llm.py.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>main()</code><br><small style="color:var(--muted)">scripts/list_models.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>get_client()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>test_model()</code><br><small style="color:var(--muted)">scripts/list_models.py</small></td>
+  <td>main() node in scripts/list_models.py.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>test_model()</code><br><small style="color:var(--muted)">scripts/list_models.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>main()</code><br><small style="color:var(--muted)">scripts/list_models.py</small></td>
+  <td><code>time</code></td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>AsyncOpenAI</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-async">Async</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>AsyncOpenAI node in project.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>config.py</code><br><small style="color:var(--muted)">backend/config.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>github_tools.py</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>list_models.py</code><br><small style="color:var(--muted)">scripts/list_models.py</small><br><code>llm.py</code><br><small style="color:var(--muted)">backend/llm.py</small><br>+4 more</td>
+  <td><code>dotenv</code><br><code>os</code><br><code>pathlib</code></td>
+  <td>Module file in backend/config.py.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>backend/__init__.py</code><br><small style="color:var(--muted)">backend/__init__.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>github_tools.py</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>list_models.py</code><br><small style="color:var(--muted)">scripts/list_models.py</small><br><code>llm.py</code><br><small style="color:var(--muted)">backend/llm.py</small><br>+4 more</td>
+  <td>No direct outbound edge</td>
+  <td>Module file in backend/__init__.py.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>llm.py</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>list_models.py</code><br><small style="color:var(--muted)">scripts/list_models.py</small><br><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>pipeline.py</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+1 more</td>
+  <td><code>__init__.py</code><br><small style="color:var(--muted)">backend/__init__.py</small><br><code>chat_json()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>config.py</code><br><small style="color:var(--muted)">backend/config.py</small><br>+7 more</td>
+  <td>Module file in backend/llm.py.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>list_models.py</code><br><small style="color:var(--muted)">scripts/list_models.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>__init__.py</code><br><small style="color:var(--muted)">backend/__init__.py</small><br><code>asyncio</code><br><code>config.py</code><br><small style="color:var(--muted)">backend/config.py</small><br>+5 more</td>
+  <td>Module file in scripts/list_models.py.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>Reloads environment variables from .env to ensure runtime updates take effect…</code><br><small style="color:var(--muted)">backend/config.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing React + Vite.</td>
+  <td>Design note for Reloads environment variables from .env to ensure runtime updates take effect….</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>Returns active configured crew roles with models, descriptions, and licenses.</code><br><small style="color:var(--muted)">backend/config.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Returns active configured crew roles with models, descriptions, and licenses..</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>Returns cached AsyncOpenAI client configured from environment variables.</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Returns cached AsyncOpenAI client configured from environment variables..</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>Removes &lt;think&gt;...&lt;/think&gt; blocks emitted by deep thinking/reasoning models.</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Removes &lt;think&gt;...&lt;/think&gt; blocks emitted by deep thinking/reasoning models..</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>Executes a chat completion for the assigned role. Returns (cleaned_text,…</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Executes a chat completion for the assigned role. Returns (cleaned_text,….</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>dotenv</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>config.py</code><br><small style="color:var(--muted)">backend/config.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>dotenv node in project.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>logging</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>llm.py</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>logging node in project.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>openai</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>llm.py</code><br><small style="color:var(--muted)">backend/llm.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>openai node in project.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>os</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>config.py</code><br><small style="color:var(--muted)">backend/config.py</small><br><code>github_tools.py</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>os node in project.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>time</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>list_models.py</code><br><small style="color:var(--muted)">scripts/list_models.py</small><br><code>llm.py</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>main()</code><br><small style="color:var(--muted)">scripts/run_cli.py</small><br>+5 more</td>
+  <td>No direct outbound edge</td>
+  <td>time node in project.</td>
 </tr>
 </table>
 
@@ -1775,34 +1972,426 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>frontend/README.md</code></td><td>4 nodes</td></tr>
+      <tr><td><code>backend/llm.py</code></td><td>7 nodes</td></tr>
+<tr><td><code>backend/config.py</code></td><td>5 nodes</td></tr>
+<tr><td><code>scripts/list_models.py</code></td><td>3 nodes</td></tr>
+<tr><td><code>backend/__init__.py</code></td><td>1 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x3. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: imports x7, contains x7, calls x6, imports x5. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
+<!-- ====== 9. Architecture Specifications and Project Strategy ====== -->
+<h2 id="architecture-specifications-and-project-strategy">9. Architecture Specifications and Project Strategy</h2>
+<p>Architecture Specifications and Project Strategy groups implementation around readmemd, handoffmd, demo, model, mostly in README.md, HANDOFF.md, scripts/seed_demo_repo.md. This section covers 9 nodes and 8 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Architecture Specifications and Project Strategy (9 nodes, 8 edges)
+    subgraph architecture_specifications_and_project_strategy_a1c2f7a2["README.md"]
+        readme_kindling_project_f3dbacd4("Kindling Project Overview<br/><small>README.md</small>")
+        readme_open_weight_crew_25eac53a("Open-Weight Model Crew Architecture<br/><small>README.md</small>")
+        readme_cached_demo_replay_8ee88e34("Deterministic Demo Replay Mode<br/><small>README.md</small>")
+        readme_anti_hallucination_guardrails_348429bd("Anti-Hallucination Guardrails<br/><small>README.md</small>")
+    end
+    subgraph architecture_specifications_and_project_strategy_c59419d7["HANDOFF.md"]
+        handoff_master_handoff_a4d655ae("Hackathon Master Handoff Spec<br/><small>HANDOFF.md</small>")
+        handoff_cut_ladder_8afb0c7f("Feature Cut Ladder<br/><small>HANDOFF.md</small>")
+        handoff_role_model_mapping_c82fb3f2("Role to Model Mapping Strategy<br/><small>HANDOFF.md</small>")
+    end
+    docs_pipeline_diagram_0c431b46("Architecture Pipeline Diagram<br/><small>docs/pipeline.png</small>")
+    scripts_seed_demo_repo_guide_a05b6779("Demo Repository Seeding Guide<br/><small>scripts/seed_demo_repo.md</small>")
+    handoff_master_handoff_a4d655ae -->|references| handoff_cut_ladder_8afb0c7f
+    handoff_master_handoff_a4d655ae -->|references| handoff_role_model_mapping_c82fb3f2
+    readme_kindling_project_f3dbacd4 -->|references| readme_anti_hallucination_guardrails_348429bd
+    readme_kindling_project_f3dbacd4 -->|references| readme_cached_demo_replay_8ee88e34
+    readme_kindling_project_f3dbacd4 -->|references| readme_open_weight_crew_25eac53a
+    readme_open_weight_crew_25eac53a -->|relates| handoff_role_model_mapping_c82fb3f2
+    docs_pipeline_diagram_0c431b46 -->|relates| readme_kindling_project_f3dbacd4
+    scripts_seed_demo_repo_guide_a05b6779 -->|relates| readme_cached_demo_replay_8ee88e34
+    class readme_kindling_project_f3dbacd4 concept;
+    class readme_open_weight_crew_25eac53a klass;
+    class readme_cached_demo_replay_8ee88e34 klass;
+    class readme_anti_hallucination_guardrails_348429bd concept;
+    class handoff_master_handoff_a4d655ae concept;
+    class handoff_cut_ladder_8afb0c7f concept;
+    class handoff_role_model_mapping_c82fb3f2 klass;
+    class docs_pipeline_diagram_0c431b46 klass;
+    class scripts_seed_demo_repo_guide_a05b6779 concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>Role to Model Mapping Strategy</code><br><small style="color:var(--muted)">HANDOFF.md</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Role to Model Mapping Strategy node in HANDOFF.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>Deterministic Demo Replay Mode</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Deterministic Demo Replay Mode node in README.md.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>Open-Weight Model Crew Architecture</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Open-Weight Model Crew Architecture node in README.md.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Hackathon Master Handoff Spec</code><br><small style="color:var(--muted)">HANDOFF.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Hackathon Master Handoff Spec.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>Kindling Project Overview</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Kindling Project Overview.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>Demo Repository Seeding Guide</code><br><small style="color:var(--muted)">scripts/seed_demo_repo.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Demo Repository Seeding Guide.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>Architecture Pipeline Diagram</code><br><small style="color:var(--muted)">docs/pipeline.png</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Architecture Pipeline Diagram node in docs/pipeline.png.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>Feature Cut Ladder</code><br><small style="color:var(--muted)">HANDOFF.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Feature Cut Ladder.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>Anti-Hallucination Guardrails</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Anti-Hallucination Guardrails.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>README.md</code></td><td>4 nodes</td></tr>
+<tr><td><code>HANDOFF.md</code></td><td>3 nodes</td></tr>
+<tr><td><code>docs/pipeline.png</code></td><td>1 nodes</td></tr>
+<tr><td><code>scripts/seed_demo_repo.md</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: references x5, relates x3. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 10. Prompt Engineering and Model Templates ====== -->
+<h2 id="prompt-engineering-and-model-templates">10. Prompt Engineering and Model Templates</h2>
+<p>Prompt Engineering and Model Templates groups implementation around kindling, prompt, catalog, build, mostly in BUILD_PROMPTS.md. This section covers 1 nodes and 0 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Prompt Engineering and Model Templates (1 nodes, 0 edges)
+    build_prompts_prompt_catalog_f7ceec89("Kindling Prompt Catalog<br/><small>BUILD_PROMPTS.md</small>")
+    class build_prompts_prompt_catalog_f7ceec89 concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>Kindling Prompt Catalog</code><br><small style="color:var(--muted)">BUILD_PROMPTS.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Kindling Prompt Catalog.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>BUILD_PROMPTS.md</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: No high-confidence call edges detected. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 11. Project Visual Hero Graphic ====== -->
+<h2 id="project-visual-hero-graphic">11. Project Visual Hero Graphic</h2>
+<p>Project Visual Hero Graphic groups implementation around kindling, hero, graphic, frontend, mostly in src/assets/hero.png. This section covers 1 nodes and 0 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Project Visual Hero Graphic (1 nodes, 0 edges)
+    frontend_src_assets_hero_banner_a3987b01("Kindling Hero Graphic<br/><small>src/assets/hero.png</small>")
+    class frontend_src_assets_hero_banner_a3987b01 klass;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>Kindling Hero Graphic</code><br><small style="color:var(--muted)">src/assets/hero.png</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Builds dependency relationships and graph data.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/assets/hero.png</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: No high-confidence call edges detected. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 12. React UI Framework Asset ====== -->
+<h2 id="react-ui-framework-asset">12. React UI Framework Asset</h2>
+<p>React UI Framework Asset groups implementation around react, framework, logo, frontend, mostly in src/assets/react.svg. This section covers 1 nodes and 0 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: React UI Framework Asset (1 nodes, 0 edges)
+    frontend_src_assets_react_logo_20c803a3("React Framework Logo<br/><small>src/assets/react.svg</small>")
+    class frontend_src_assets_react_logo_20c803a3 klass;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>React Framework Logo</code><br><small style="color:var(--muted)">src/assets/react.svg</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>React Framework Logo node in src/assets/react.svg.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/assets/react.svg</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: No high-confidence call edges detected. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 13. Vite Bundler Asset ====== -->
+<h2 id="vite-bundler-asset">13. Vite Bundler Asset</h2>
+<p>Vite Bundler Asset groups implementation around vite, bundler, logo, frontend, mostly in src/assets/vite.svg. This section covers 1 nodes and 0 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Vite Bundler Asset (1 nodes, 0 edges)
+    frontend_src_assets_vite_logo_564a6189("Vite Bundler Logo<br/><small>src/assets/vite.svg</small>")
+    class frontend_src_assets_vite_logo_564a6189 klass;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>Vite Bundler Logo</code><br><small style="color:var(--muted)">src/assets/vite.svg</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Vite Bundler Logo node in src/assets/vite.svg.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/assets/vite.svg</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: No high-confidence call edges detected. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<h2 id="hyperedges">Group Relationships (Hyperedges)</h2>
+<div class="grid">
+
+  <div class="card">
+    <h4>Kindling Crew Orchestration and Specification</h4>
+    <p><code>form</code> — 3 participants</p>
+    <ul>
+      <li><code>readme_open_weight_crew</code></li>
+      <li><code>handoff_role_model_mapping</code></li>
+      <li><code>docs_pipeline_diagram</code></li>
+    </ul>
+  </div>
+</div>
+<hr>
 <h2 id="stats">Project Statistics</h2>
 
 <div class="grid">
   <div class="card">
     <h4>Graph</h4>
     <table style="width:100%;font-size:0.85rem;">
-      <tr><td>Nodes</td><td>254</td></tr>
-      <tr><td>Edges</td><td>485</td></tr>
-      <tr><td>Hyperedges</td><td>0</td></tr>
-      <tr><td>Communities</td><td>14</td></tr>
-      <tr><td>Documented Sections</td><td>6</td></tr>
+      <tr><td>Nodes</td><td>248</td></tr>
+      <tr><td>Edges</td><td>503</td></tr>
+      <tr><td>Hyperedges</td><td>1</td></tr>
+      <tr><td>Communities</td><td>18</td></tr>
+      <tr><td>Documented Sections</td><td>12</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Edge Confidence</h4>
     <table style="width:100%;font-size:0.85rem;">
-      <tr><td>EXTRACTED</td><td>456</td></tr>
-      <tr><td>INFERRED</td><td>29</td></tr>
+      <tr><td>EXTRACTED</td><td>470</td></tr>
+      <tr><td>INFERRED</td><td>33</td></tr>
       <tr><td>AMBIGUOUS</td><td>0</td></tr>
     </table>
   </div>
@@ -1810,7 +2399,7 @@ flowchart LR
 
 <div style="text-align:center; padding:40px 0; color: var(--muted); font-size:0.9rem;">
   <p>hacktober_Kindling — Architecture Documentation</p>
-  <p>Generated: 2026-10-22 12:48 UTC · graphify callflow-html</p>
+  <p>Generated: 2026-10-22 13:04 UTC · graphify callflow-html</p>
 </div>
 
 </div><!-- .container -->
