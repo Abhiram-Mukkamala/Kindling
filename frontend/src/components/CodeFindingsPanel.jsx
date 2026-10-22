@@ -16,7 +16,7 @@ export default function CodeFindingsPanel({
   // Find latest code_analysis event
   const codeEvent = events.slice().reverse().find((e) => e.step === 'code_analysis')
 
-  // Check if Qwen / CODE_MODEL is configured
+  // Check if code review model is configured
   const isConfigured = Boolean(
     codeModel &&
     codeModel.trim() &&
@@ -42,22 +42,28 @@ export default function CodeFindingsPanel({
   const filesAnalyzed = codeEvent?.payload?.files_analyzed
   const findingsCount = Array.isArray(findings) ? findings.length : (codeEvent?.payload?.findings_count ?? 0)
 
-  // State 1: Skipped because Qwen is not configured
+  // Dynamic model label
+  const activeModelName = codeEvent?.model || codeModel || ''
+  const modelBrand = activeModelName.toLowerCase().includes('nemotron')
+    ? 'Nemotron'
+    : (activeModelName.toLowerCase().includes('qwen') ? 'Qwen' : 'Code Reviewer')
+
+  // State 1: Skipped because code model is not configured
   if (status === 'skipped' || !isConfigured) {
     return (
       <div className="findings-panel findings-panel-skipped">
         <div className="findings-header">
           <div className="findings-title-area">
-            <span className="findings-title">🔍 Code Reviewer (Qwen) Findings</span>
+            <span className="findings-title">🔍 Code Reviewer ({modelBrand}) Findings</span>
             <span className="node-status-chip chip-skipped">SKIPPED</span>
           </div>
         </div>
         <div className="findings-body">
           <p className="findings-notice">
-            Code analysis skipped because Qwen is not configured.
+            Code analysis skipped because code model is not configured.
           </p>
           <p className="findings-subnotice">
-            To enable deep source code analysis, set <code>CODE_MODEL</code> in your backend <code>.env</code> file (e.g. <code>CODE_MODEL=qwen/qwen-2.5-coder-32b-instruct</code>).
+            To enable deep source code analysis, set <code>CODE_MODEL</code> in your backend <code>.env</code> file (e.g. <code>CODE_MODEL=nvidia/nemotron-3-ultra-550b-a55b</code>).
           </p>
         </div>
       </div>
@@ -70,7 +76,7 @@ export default function CodeFindingsPanel({
       <div className="findings-panel findings-panel-error">
         <div className="findings-header">
           <div className="findings-title-area">
-            <span className="findings-title">🔍 Code Reviewer (Qwen) Findings</span>
+            <span className="findings-title">🔍 Code Reviewer ({modelBrand}) Findings</span>
             <span className="node-status-chip chip-error">ERROR</span>
           </div>
         </div>
@@ -97,7 +103,7 @@ export default function CodeFindingsPanel({
       <div className="findings-panel findings-panel-running">
         <div className="findings-header">
           <div className="findings-title-area">
-            <span className="findings-title">🔍 Code Reviewer (Qwen) Findings</span>
+            <span className="findings-title">🔍 Code Reviewer ({modelBrand}) Findings</span>
             <span className="node-status-chip chip-running">RUNNING</span>
           </div>
         </div>
@@ -106,7 +112,7 @@ export default function CodeFindingsPanel({
             <span className="spinner" /> Code analysis in progress...
           </p>
           <p className="findings-subnotice">
-            Qwen is analyzing repository source files for concrete bugs, edge cases, and code smells.
+            {modelBrand} is analyzing repository source files for concrete bugs, edge cases, and code smells.
           </p>
         </div>
       </div>
@@ -119,7 +125,7 @@ export default function CodeFindingsPanel({
       <div className="findings-panel findings-panel-waiting">
         <div className="findings-header">
           <div className="findings-title-area">
-            <span className="findings-title">🔍 Code Reviewer (Qwen) Findings</span>
+            <span className="findings-title">🔍 Code Reviewer ({modelBrand}) Findings</span>
             <span className="node-status-chip chip-waiting">WAITING</span>
           </div>
         </div>
@@ -141,7 +147,7 @@ export default function CodeFindingsPanel({
       <div className="findings-panel findings-panel-done">
         <div className="findings-header">
           <div className="findings-title-area">
-            <span className="findings-title">🔍 Code Reviewer (Qwen) Findings (0)</span>
+            <span className="findings-title">🔍 Code Reviewer ({modelBrand}) Findings (0)</span>
             <span className="node-status-chip chip-done">COMPLETED</span>
           </div>
         </div>
@@ -165,7 +171,7 @@ export default function CodeFindingsPanel({
         <div className="findings-header">
           <div className="findings-title-area">
             <span className="findings-title">
-              🔍 Code Reviewer (Qwen) Findings ({findings.length})
+              🔍 Code Reviewer ({modelBrand}) Findings ({findings.length})
             </span>
             <span className="node-status-chip chip-done">COMPLETED</span>
           </div>
@@ -246,7 +252,7 @@ export default function CodeFindingsPanel({
     <div className="findings-panel findings-panel-done">
       <div className="findings-header">
         <div className="findings-title-area">
-          <span className="findings-title">🔍 Code Reviewer (Qwen) Findings</span>
+          <span className="findings-title">🔍 Code Reviewer ({modelBrand}) Findings</span>
           <span className="node-status-chip chip-done">COMPLETED</span>
         </div>
       </div>

@@ -9,23 +9,23 @@
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
-- Community 0
-- Community 1
-- Community 2
-- Community 3
-- Community 4
-- Community 5
-- Community 6
-- Community 7
-- Community 8
-- Community 9
-- Community 10
-- Community 11
-- Community 12
-- Community 13
-- Community 14
-- Community 15
-- Community 16
+- Pipeline Orchestration and Crew Execution
+- Event Streaming and SSE Dispatch
+- Frontend Dependencies and Tooling
+- GitHub Ingestion and Issue Creation
+- Configuration and Model Role Routing
+- LLM Client and JSON Structured Parsing
+- Graphify Knowledge Graph Integration
+- Architecture Specifications and Project Strategy
+- Oxlint Linter Configuration
+- Frontend Build and Script Tasks
+- Web Application Entry and Shell
+- Python Environment and Dependency Packages
+- Prompt Engineering and Model Templates
+- UI Vector Icons Sprite
+- Project Visual Hero Graphic
+- React UI Framework Asset
+- Vite Bundler Asset
 
 ## God Nodes (most connected - your core abstractions)
 1. `Draft` - 19 edges
@@ -59,47 +59,47 @@
 
 ## Communities (18 total, 7 thin omitted)
 
-### Community 0 - "Community 0"
+### Community 0 - "Pipeline Orchestration and Crew Execution"
 Cohesion: 0.08
 Nodes (16): _get_model_for_role(), code_analysis_step(), judge_one(), process_drafts(), rewrite_one(), ScannerOutput, CodeAnalysisResult, CodeFinding (+8 more)
 
-### Community 1 - "Community 1"
+### Community 1 - "Event Streaming and SSE Dispatch"
 Cohesion: 0.07
 Nodes (16): make_emitter(), new_run(), approve_draft(), ApproveRequest, get_configuration(), get_graphify_summary_endpoint(), root(), ScanRequest (+8 more)
 
-### Community 2 - "Community 2"
+### Community 2 - "Frontend Dependencies and Tooling"
 Cohesion: 0.08
 Nodes (24): dependencies, react, react-dom, devDependencies, oxlint, @types/react, @types/react-dom, vite (+16 more)
 
-### Community 3 - "Community 3"
+### Community 3 - "GitHub Ingestion and Issue Creation"
 Cohesion: 0.16
 Nodes (12): build_repo_summary(), create_issue(), create_issue_on_target_repo(), fetch_open_issues(), fetch_readme(), fetch_repo_tree(), fetch_source_files(), find_todos() (+4 more)
 
-### Community 4 - "Community 4"
+### Community 4 - "Configuration and Model Role Routing"
 Cohesion: 0.13
 Nodes (9): reload(), roles(), chat(), get_client(), _strip_thinking_tags(), main(), test_model(), cli_emit() (+1 more)
 
-### Community 5 - "Community 5"
+### Community 5 - "LLM Client and JSON Structured Parsing"
 Cohesion: 0.15
 Nodes (8): emit(), chat_json(), extract_json(), vision_worker(), _build_drafter_user_prompt(), draft_issues(), draft_step(), scan_step()
 
-### Community 6 - "Community 6"
+### Community 6 - "Graphify Knowledge Graph Integration"
 Cohesion: 0.23
 Nodes (3): get_graph_context_for_files(), get_graph_summary(), main()
 
-### Community 7 - "Community 7"
+### Community 7 - "Architecture Specifications and Project Strategy"
 Cohesion: 0.22
 Nodes (7): Architecture Pipeline Diagram, Hackathon Master Handoff Spec, Role to Model Mapping Strategy, Deterministic Demo Replay Mode, Kindling Project Overview, Open-Weight Model Crew Architecture, Demo Repository Seeding Guide
 
-### Community 8 - "Community 8"
+### Community 8 - "Oxlint Linter Configuration"
 Cohesion: 0.33
 Nodes (5): plugins, rules, react/only-export-components, react/rules-of-hooks, $schema
 
-### Community 9 - "Community 9"
+### Community 9 - "Frontend Build and Script Tasks"
 Cohesion: 0.33
 Nodes (6): scripts, build, dev, lint, preview, test
 
-### Community 10 - "Community 10"
+### Community 10 - "Web Application Entry and Shell"
 Cohesion: 0.67
 Nodes (3): Frontend Single-Page Entry Shell, Kindling Flame Favicon, React Vite Frontend Spec
 
@@ -111,17 +111,17 @@ Nodes (3): Frontend Single-Page Entry Shell, Kindling Flame Favicon, React Vite 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Draft` connect `Community 0` to `Community 1`, `Community 4`, `Community 5`?**
+- **Why does `Draft` connect `Pipeline Orchestration and Crew Execution` to `Event Streaming and SSE Dispatch`, `Configuration and Model Role Routing`, `LLM Client and JSON Structured Parsing`?**
   _High betweenness centrality (0.058) - this node is a cross-community bridge._
 - **Are the 7 inferred relationships involving `Draft` (e.g. with `ApproveRequest` and `screenshot_scan()`) actually correct?**
   _`Draft` has 7 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `@types/react`, `@types/react-dom`, `oxlint` to the rest of the system?**
   _14 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Community 0` be split into smaller, more focused modules?**
+- **Should `Pipeline Orchestration and Crew Execution` be split into smaller, more focused modules?**
   _Cohesion score 0.07857142857142857 - nodes in this community are weakly interconnected._
-- **Why does `TestModelRoutingAndPipeline` connect `Community 0` to `Community 6`?**
+- **Why does `TestModelRoutingAndPipeline` connect `Pipeline Orchestration and Crew Execution` to `Graphify Knowledge Graph Integration`?**
   _High betweenness centrality (0.037) - this node is a cross-community bridge._
 - **Are the 5 inferred relationships involving `TestModelRoutingAndPipeline` (e.g. with `CodeAnalysisResult` and `CodeFinding`) actually correct?**
   _`TestModelRoutingAndPipeline` has 5 INFERRED edges - model-reasoned connections that need verification._
-- **Should `Community 1` be split into smaller, more focused modules?**
+- **Should `Event Streaming and SSE Dispatch` be split into smaller, more focused modules?**
   _Cohesion score 0.06976744186046512 - nodes in this community are weakly interconnected._

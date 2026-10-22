@@ -55,7 +55,7 @@ export default function PipelineView({
       })
     }
 
-    // Stage 3: Code Reviewer — Qwen (Permanently visible)
+    // Stage 3: Code Reviewer (Permanently visible)
     // Derive configured code model from direct prop, config object, or roles list
     const rawCodeModel = (
       codeModel ??
@@ -111,10 +111,20 @@ export default function PipelineView({
       codeDetail = roleMap['code_analysis']?.why || 'Deep source code analysis and evidence extraction to identify concrete bugs.'
     }
 
+    const modelLower = resolvedCodeModel.toLowerCase()
+    let codeRole = 'Code Reviewer — Qwen'
+    if (modelLower.includes('nemotron')) {
+      codeRole = 'Code Reviewer — Nemotron'
+    } else if (modelLower.includes('qwen')) {
+      codeRole = 'Code Reviewer — Qwen'
+    } else if (isCodeConfigured) {
+      codeRole = `Code Reviewer — ${resolvedCodeModel.split('/').pop().split('-')[0]}`
+    }
+
     nodes.push({
       key: 'code_analysis',
       step: 'code_analysis',
-      role: 'Code Reviewer — Qwen',
+      role: codeRole,
       model: resolvedCodeModel,
       license: roleMap['code_analysis']?.license || 'Open-weight',
       why: roleMap['code_analysis']?.why || 'Deep source code analysis and evidence extraction to identify concrete bugs.',
