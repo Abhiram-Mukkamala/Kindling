@@ -32,6 +32,23 @@ class ScanRequest(BaseModel):
 class ApproveRequest(BaseModel):
     draft: Draft
 
+@app.get("/")
+async def root():
+    """Root status endpoint directing visitors to frontend or interactive docs."""
+    return {
+        "name": "Kindling API",
+        "status": "online",
+        "frontend_url": "http://localhost:5173",
+        "api_docs": "http://localhost:8000/docs",
+        "endpoints": {
+            "config": "/api/config",
+            "scan": "/api/scan",
+            "stream": "/api/stream/{run_id}",
+            "approve": "/api/approve",
+            "screenshot": "/api/screenshot",
+        },
+    }
+
 @app.get("/api/config")
 async def get_configuration():
     """Returns active crew configuration, assigned open models, target repo, and demo mode."""
@@ -107,14 +124,19 @@ async def approve_draft(request: ApproveRequest):
         )
 
     # Build rich Markdown issue description
-    files_list = "\n".join(f"- `{f}`" for f in draft.files_to_touch) if draft.files_to_touch else "- *(No specific file identified)*"
+    files_list = "\n".join(f"- `{f}`" for f in draft.files_to_touch) if draft.files_to_touch else "- *(No existing files touched)*"
+    new_files_section = ""
+    if getattr(draft, "new_files", None) and draft.new_files:
+        new_files_list = "\n".join(f"- `{f}`" for f in draft.new_files)
+        new_files_section = f"\n\n## New Files to Create\n{new_files_list}"
+
     criteria_list = "\n".join(f"- [ ] {ac}" for ac in draft.acceptance_criteria)
 
     markdown_body = f"""## Context
 {draft.context}
 
 ## Files to Touch
-{files_list}
+{files_list}{new_files_section}
 
 ## Acceptance Criteria
 {criteria_list}
@@ -234,3 +256,26 @@ async def screenshot_scan(
 
     asyncio.create_task(vision_worker())
     return {"run_id": run_id}
+
+# Mount built frontend static files if dist/ exists
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+dist_dir = Path(__file__).resolve().parent.parent / "frontend" / "dist"
+if dist_dir.exists():
+    app.mount("/assets", StaticFiles(directory=dist_dir / "assets"), name="assets")
+
+    @app.get("/")
+    async def serve_root():
+        return FileResponse(dist_dir / "index.html")
+
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        # Do not intercept API routes
+        if full_path.startswith("api"):
+            raise HTTPException(status_code=404, detail="Not Found")
+        target_file = dist_dir / full_path
+        if target_file.is_file():
+            return FileResponse(target_file)
+        return FileResponse(dist_dir / "index.html")
+

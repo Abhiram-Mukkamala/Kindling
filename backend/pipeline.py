@@ -6,8 +6,8 @@ from typing import List, Tuple, Dict, Any, Optional, Callable, Awaitable
 from pydantic import BaseModel, Field
 
 from backend import config, llm, prompts
-from backend.github_tools import build_repo_summary, parse_repo_url
-from backend.schemas import Draft, DraftList, JudgeResult, IssueResult, RunResult
+from backend.github_tools import build_repo_summary, parse_repo_url, get_repo_summary
+from backend.schemas import Draft, DraftList, JudgeResult, IssueResult, RunResult, IssueDraft, DraftsBatch
 from backend.events import RUNS, make_emitter
 
 CACHE_DIR = Path(__file__).resolve().parent.parent / "data" / "cache"
@@ -18,9 +18,9 @@ class ScannerOutput(BaseModel):
 
 def _build_drafter_user_prompt(summary: Dict[str, Any], opportunities: Optional[List[str]] = None) -> str:
     parts = [
-        f"Repository: {summary['owner']}/{summary['repo']}",
-        f"Description: {summary['description']}",
-        f"Default Branch: {summary['default_branch']}",
+        f"Repository: {summary.get('owner', '')}/{summary.get('repo', '')}",
+        f"Description: {summary.get('description', '')}",
+        f"Default Branch: {summary.get('default_branch', 'main')}",
         "",
         "=== REPOSITORY FILE TREE (Only use paths listed here) ===",
         "\n".join(summary.get("tree", [])[:150]),
@@ -33,7 +33,10 @@ def _build_drafter_user_prompt(summary: Dict[str, Any], opportunities: Optional[
     issues = summary.get("open_issues", [])
     if issues:
         for it in issues[:8]:
-            parts.append(f"#{it['number']}: {it['title']} (Labels: {', '.join(it['labels'])})\n{it['body'][:200]}\n")
+            lbls = it.get('labels', [])
+            lbl_str = f" (Labels: {', '.join(lbls)})" if lbls else ""
+            num_str = f"#{it['number']}: " if 'number' in it else ""
+            parts.append(f"{num_str}{it['title']}{lbl_str}\n{it.get('body', '')[:200]}\n")
     else:
         parts.append("No open issues.")
 
@@ -41,7 +44,15 @@ def _build_drafter_user_prompt(summary: Dict[str, Any], opportunities: Optional[
     todos = summary.get("todos", [])
     if todos:
         for td in todos[:12]:
-            parts.append(f"{td['path']}:{td['line']} -> {td['text']}")
+            tag = td.get('tag', 'TODO')
+            file_p = td.get('path') or td.get('file', '')
+            content = td.get('text') or td.get('content', '')
+            parts.append(f"[{tag}] {file_p}:{td.get('line', '')} -> {content}")
+            snippet = td.get('snippet')
+            if snippet:
+                parts.append("Context Snippet (surrounding code):")
+                parts.append(snippet)
+                parts.append("")
     else:
         parts.append("No explicit TODO comments found.")
 
@@ -57,7 +68,7 @@ async def scan_step(summary: Dict[str, Any]) -> Tuple[List[str], int]:
     """Generates a quick shortlist of contribution opportunities using the Scanner model."""
     user_prompt = (
         f"Repository: {summary['owner']}/{summary['repo']}\n"
-        f"Description: {summary['description']}\n"
+        f"Description: {summary.get('description', '')}\n"
         f"README excerpt:\n{summary.get('readme', '')[:1500]}\n"
         f"Files:\n" + "\n".join(summary.get("tree", [])[:60])
     )
@@ -70,6 +81,11 @@ async def draft_step(summary: Dict[str, Any], opportunities: Optional[List[str]]
     result, duration_ms = await llm.chat_json("drafter", prompts.DRAFTER_SYSTEM, user_prompt, DraftList, max_tokens=3000)
     return result.drafts, duration_ms
 
+async def draft_issues(repo_summary: Dict[str, Any]) -> List[IssueDraft]:
+    """Backwards compatibility alias for draft_step."""
+    drafts, _ = await draft_step(repo_summary)
+    return drafts
+
 async def judge_one(draft: Draft, tree: List[str]) -> Tuple[JudgeResult, int]:
     """Runs quality evaluation on a single draft using the Judge model."""
     user_prompt = (
@@ -77,7 +93,9 @@ async def judge_one(draft: Draft, tree: List[str]) -> Tuple[JudgeResult, int]:
         f"Draft to review:\n"
         f"{draft.model_dump_json(indent=2)}"
     )
-    return await llm.chat_json("judge", prompts.JUDGE_SYSTEM, user_prompt, JudgeResult, max_tokens=1500)
+    result, duration_ms = await llm.chat_json("judge", prompts.JUDGE_SYSTEM, user_prompt, JudgeResult, max_tokens=1200)
+    print(f"   [Judge Model] '{draft.title[:35]}...' -> {duration_ms}ms (Score: {result.score}/10)")
+    return result, duration_ms
 
 async def rewrite_one(draft: Draft, judge: JudgeResult, tree: List[str]) -> Tuple[Draft, int]:
     """Rewrites and polishes an issue draft incorporating Judge critique."""
@@ -88,7 +106,9 @@ async def rewrite_one(draft: Draft, judge: JudgeResult, tree: List[str]) -> Tupl
         f"Judge Critique: {judge.critique}\n"
         f"Identified Problems:\n" + "\n".join(f"- {p}" for p in judge.problems)
     )
-    return await llm.chat_json("drafter", prompts.REWRITE_SYSTEM, user_prompt, Draft, max_tokens=2500)
+    result, duration_ms = await llm.chat_json("drafter", prompts.REWRITE_SYSTEM, user_prompt, Draft, max_tokens=1200)
+    print(f"   [Rewrite Model] '{draft.title[:35]}...' -> {duration_ms}ms")
+    return result, duration_ms
 
 async def process_drafts(
     drafts: List[Draft],
@@ -145,7 +165,6 @@ async def process_drafts(
         if j is not None:
             rewrite_tasks.append(rewrite_one(d, j, tree))
         else:
-            # If judge failed, pass through original
             async def passthrough(d=d):
                 return d, 0
             rewrite_tasks.append(passthrough())
@@ -193,12 +212,13 @@ async def replay_cached(
     """Replays pre-recorded events with realistic delays for zero-cost demo reliability."""
     events = cache_data.get("events", [])
     for ev in events:
-        delay = min(max((ev.get("duration_ms") or 500) / 1000.0 * 0.5, 0.3), 2.0)
+        delay = min(max((ev.get("duration_ms") or 500) / 1000.0 * 0.4, 0.2), 1.5)
         await asyncio.sleep(delay)
         await emit(ev)
 
-    RUNS[run_id]["result"] = cache_data.get("result")
-    RUNS[run_id]["done"] = True
+    if run_id in RUNS:
+        RUNS[run_id]["result"] = cache_data.get("result")
+        RUNS[run_id]["done"] = True
 
 async def run_pipeline(run_id: str, repo_url: str) -> None:
     """Main pipeline execution coordinating GitHub scan, Drafter, Judge, and Rewrite."""
@@ -227,7 +247,10 @@ async def run_pipeline(run_id: str, repo_url: str) -> None:
         t_gh_start = time.time()
         summary = await build_repo_summary(repo_url)
         gh_duration_ms = round((time.time() - t_gh_start) * 1000)
-        detail_msg = f"{len(summary['tree'])} files, {len(summary['open_issues'])} open issues, {len(summary['todos'])} TODOs"
+        tree_count = len(summary.get("tree", []))
+        issues_count = len(summary.get("open_issues", []))
+        todos_count = len(summary.get("todos", []))
+        detail_msg = f"{tree_count} files, {issues_count} open issues, {todos_count} TODOs"
         await emit({
             "step": "github",
             "role": "github",

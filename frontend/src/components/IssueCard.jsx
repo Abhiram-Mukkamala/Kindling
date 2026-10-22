@@ -132,9 +132,23 @@ export default function IssueCard({ issue, onApprove }) {
                   ))}
                 </div>
               ) : (
-                <span style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>No specific files identified.</span>
+                <span style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>No existing files touched.</span>
               )}
             </div>
+
+            {/* New Files to create */}
+            {currentDraft.new_files && currentDraft.new_files.length > 0 && (
+              <div className="content-block">
+                <div className="content-label" style={{ color: 'var(--accent-green-bright)' }}>New Files to Create:</div>
+                <div className="file-chips">
+                  {currentDraft.new_files.map((f, idx) => (
+                    <span key={idx} className="file-chip" style={{ borderColor: 'var(--accent-green-bright)', color: 'var(--accent-green-bright)' }}>
+                      + {f}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Acceptance Criteria */}
             <div className="content-block">

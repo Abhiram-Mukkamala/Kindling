@@ -7,6 +7,12 @@ from pathlib import Path
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 from backend import config, github_tools, pipeline
 from backend.schemas import Draft
 
@@ -53,7 +59,7 @@ async def main():
         print(f"[ERROR] Drafter model call failed: {e}")
         sys.exit(1)
 
-    # Validate file paths against repository tree
+    # Validate file paths against repository tree (files_to_touch only)
     print("\n   Checking file path references against repository tree:")
     for d in drafts:
         for f in d.files_to_touch:
@@ -61,6 +67,8 @@ async def main():
                 print(f"   [PATH WARNING] '{f}' from draft '{d.title}' was not found in repo tree!")
             else:
                 print(f"   [PATH OK] '{f}'")
+        for nf in getattr(d, 'new_files', []):
+            print(f"   [NEW FILE] '{nf}' (creation proposed, no warning)")
 
     print("\n3. Running Judge evaluation and Drafter rewrite in parallel...")
     try:
@@ -81,6 +89,8 @@ async def main():
         print(f"ORIGINAL TITLE : {orig.title}")
         print(f"ORIGINAL CONTEXT: {orig.context}")
         print(f"FILES TO TOUCH  : {', '.join(orig.files_to_touch) or '(none)'}")
+        if getattr(orig, 'new_files', None):
+            print(f"NEW FILES       : {', '.join(orig.new_files)}")
 
         if jg:
             print(f"\nJUDGE REVIEW    : Score {jg.score}/10")

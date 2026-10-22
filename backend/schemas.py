@@ -6,6 +6,7 @@ class Draft(BaseModel):
     title: str = Field(description="Action-oriented issue title, under 80 characters")
     context: str = Field(description="Context explaining why the change matters and where to look (2-4 sentences)")
     files_to_touch: List[str] = Field(default_factory=list, description="List of actual source file paths from the repository tree")
+    new_files: List[str] = Field(default_factory=list, description="Optional list of new files to create")
     acceptance_criteria: List[str] = Field(default_factory=list, description="3 to 5 concrete, testable checks")
     difficulty: Literal["beginner", "intermediate"] = Field(description="Skill level required for contributors")
     source: Literal["todo", "open_issue", "readme_gap", "screenshot"] = Field(description="Origin signal for this issue")
