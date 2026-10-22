@@ -35,6 +35,9 @@ async def main():
     print(f"Target Repo: {repo_url}")
     print(f"Drafter: {config.DRAFTER_MODEL or '(not set)'}")
     print(f"Judge:   {config.JUDGE_MODEL or '(not set)'}")
+    print(f"Rewrite: {config.REWRITE_MODEL or config.DRAFTER_MODEL or '(not set)'}")
+    if config.CODE_MODEL:
+        print(f"Code:    {config.CODE_MODEL}")
     print("=" * 65)
 
     if config.JUDGE_MODEL and config.DRAFTER_MODEL and config.JUDGE_MODEL == config.DRAFTER_MODEL:
@@ -105,6 +108,9 @@ async def main():
         print(f"ACCEPTANCE CRITERIA :")
         for ac in fin.acceptance_criteria:
             print(f"  [ ] {ac}")
+        if iss.models_used:
+            models_str = ", ".join(f"{k.capitalize()}: {v.split('/').pop()}" for k, v in iss.models_used.items())
+            print(f"MODELS USED         : {models_str}")
 
     print("\n" + "=" * 65)
     print("Done! All drafts verified and ready.")

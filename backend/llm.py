@@ -5,10 +5,14 @@ from typing import TypeVar, Type, Optional, Tuple
 from openai import AsyncOpenAI
 from pydantic import BaseModel, ValidationError
 from backend import config
+import logging
+
+logger = logging.getLogger(__name__)
 
 T = TypeVar("T", bound=BaseModel)
 
 _client: Optional[AsyncOpenAI] = None
+
 
 def get_client() -> AsyncOpenAI:
     """Returns cached AsyncOpenAI client configured from environment variables."""
@@ -21,6 +25,7 @@ def get_client() -> AsyncOpenAI:
             timeout=90.0,
         )
     return _client
+
 
 def extract_json(text: str) -> dict:
     """Strips code fences and extracts the outermost JSON object as a dict."""
@@ -36,10 +41,12 @@ def extract_json(text: str) -> dict:
         return json.loads(json_candidate)
     return json.loads(text)
 
+
 def _strip_thinking_tags(text: str) -> str:
     """Removes <think>...</think> blocks emitted by deep thinking/reasoning models."""
     cleaned = re.sub(r"<think>[\s\S]*?</think>", "", text)
     return cleaned.strip()
+
 
 def _get_model_for_role(role: str) -> str:
     role_lower = role.lower()
@@ -47,11 +54,15 @@ def _get_model_for_role(role: str) -> str:
         return config.DRAFTER_MODEL
     elif role_lower == "judge":
         return config.JUDGE_MODEL
+    elif role_lower == "rewrite":
+        return config.REWRITE_MODEL or config.DRAFTER_MODEL
+    elif role_lower in ("code", "code_analysis"):
+        return config.CODE_MODEL
     elif role_lower == "vision":
         return config.VISION_MODEL
     elif role_lower == "scanner":
         return config.SCANNER_MODEL
-    raise ValueError(f"Unknown role '{role}'. Expected drafter, judge, vision, or scanner.")
+    raise ValueError(f"Unknown role '{role}'. Expected drafter, judge, rewrite, code_analysis, vision, or scanner.")
 
 async def chat(
     role: str,
@@ -71,7 +82,7 @@ async def chat(
     t0 = time.time()
 
     # Attempt json_object format first; gracefully fallback if endpoint doesn't support it
-    try:
+    '''try:
         response = await client.chat.completions.create(
             model=model,
             messages=messages,
@@ -80,6 +91,28 @@ async def chat(
             response_format={"type": "json_object"},
         )
     except Exception:
+        response = await client.chat.completions.create(
+            model=model,
+            messages=messages,
+            max_tokens=max_tokens,
+            temperature=temperature,
+        )'''
+
+    try:
+        response = await client.chat.completions.create(
+            model=model,
+            messages=messages,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            response_format={"type": "json_object"},
+        )
+    except Exception as first_error:
+        logger.warning(
+            "NVIDIA request with json_object failed: %s",
+            first_error,
+            stack_info=True,
+        )
+
         response = await client.chat.completions.create(
             model=model,
             messages=messages,
@@ -96,6 +129,7 @@ async def chat(
 
     cleaned_text = _strip_thinking_tags(raw_content)
     return cleaned_text, duration_ms
+
 
 async def chat_json(
     role: str,
@@ -146,3 +180,8 @@ async def chat_json(
 
 # Backward compatibility alias
 complete_structured = chat_json
+
+# Error Logging Function
+
+logger = logging.getLogger(__name__)
+

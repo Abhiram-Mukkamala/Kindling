@@ -10,6 +10,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from backend import config, prompts, llm
+from backend.graphify_tools import get_graph_summary, HTML_PATH
 from backend.events import RUNS, new_run, make_emitter
 from backend.github_tools import create_issue, build_repo_summary, parse_repo_url
 from backend.pipeline import run_pipeline, process_drafts
@@ -46,21 +47,38 @@ async def root():
             "stream": "/api/stream/{run_id}",
             "approve": "/api/approve",
             "screenshot": "/api/screenshot",
+            "graphify_summary": "/api/graphify/summary",
+            "graphify_view": "/api/graphify/view",
         },
     }
 
 @app.get("/api/config")
 async def get_configuration():
-    """Returns active crew configuration, assigned open models, target repo, and demo mode."""
+    """Returns active crew configuration, assigned open models, target repo, demo mode, and Graphify status."""
     return {
         "roles": config.roles(),
         "target_repo": config.TARGET_REPO,
         "demo_mode": config.DEMO_MODE,
         "drafter_model": config.DRAFTER_MODEL,
         "judge_model": config.JUDGE_MODEL,
+        "rewrite_model": config.REWRITE_MODEL or config.DRAFTER_MODEL,
+        "code_model": config.CODE_MODEL,
         "vision_model": config.VISION_MODEL,
         "scanner_model": config.SCANNER_MODEL,
+        "graphify": get_graph_summary(),
     }
+
+@app.get("/api/graphify/summary")
+async def get_graphify_summary_endpoint():
+    """Returns Graphify AST knowledge graph metrics, God Nodes, and architectural report."""
+    return get_graph_summary()
+
+@app.get("/api/graphify/view")
+async def serve_graphify_interactive_view():
+    """Serves the interactive standalone Graphify HTML visualization for Kindling."""
+    if not HTML_PATH.exists():
+        raise HTTPException(status_code=404, detail="Graphify HTML visualization not yet generated. Run `graphify update .`")
+    return FileResponse(HTML_PATH, media_type="text/html")
 
 @app.post("/api/scan")
 async def start_scan(request: ScanRequest):
@@ -185,9 +203,10 @@ async def screenshot_scan(
                     pass
 
             # Initial waiting states
+            rewrite_model_id = config.REWRITE_MODEL or config.DRAFTER_MODEL
             await emit({"step": "vision", "role": "vision", "model": config.VISION_MODEL, "status": "waiting"})
             await emit({"step": "judge", "role": "judge", "model": config.JUDGE_MODEL, "status": "waiting"})
-            await emit({"step": "rewrite", "role": "drafter", "model": config.DRAFTER_MODEL, "status": "waiting"})
+            await emit({"step": "rewrite", "role": "rewrite", "model": rewrite_model_id, "status": "waiting"})
 
             # Step 1: Vision model analysis
             await emit({"step": "vision", "role": "vision", "model": config.VISION_MODEL, "status": "running"})

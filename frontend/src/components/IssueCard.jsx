@@ -179,6 +179,16 @@ export default function IssueCard({ issue, onApprove }) {
               <strong>Judge:</strong> {models.judge.split('/').pop()}
             </span>
           )}
+          {models.rewrite && (
+            <span className="model-tag">
+              <strong>Rewrite:</strong> {models.rewrite.split('/').pop()}
+            </span>
+          )}
+          {models.code_analysis && (
+            <span className="model-tag">
+              <strong>Code:</strong> {models.code_analysis.split('/').pop()}
+            </span>
+          )}
         </div>
 
         <div>

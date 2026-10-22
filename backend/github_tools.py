@@ -197,6 +197,49 @@ async def find_todos(client: httpx.AsyncClient, owner: str, repo: str, tree: Lis
 
 grep_todos = find_todos
 
+async def fetch_source_files(
+    client: httpx.AsyncClient,
+    owner: str,
+    repo: str,
+    tree: List[str],
+    max_files: int = 4,
+    max_chars_per_file: int = 3000
+) -> Dict[str, str]:
+    """
+    Fetches actual source code for a bounded set of eligible files.
+    Excludes minified, lock, test/mock, or generated files.
+    """
+    eligible_extensions = (".py", ".js", ".ts", ".jsx", ".tsx", ".go", ".rs", ".java", ".c", ".cpp")
+    excluded_substrings = ("min.", ".bundle.", "vendor/", "node_modules/", "test/", "tests/", "__tests__/", ".test.", ".spec.", ".d.ts")
+    
+    candidates = []
+    for p in tree:
+        if p.endswith(eligible_extensions) and not any(ex in p.lower() for ex in excluded_substrings):
+            candidates.append(p)
+    
+    candidates.sort(key=lambda x: (x.count("/"), len(x)))
+    selected = candidates[:max_files]
+    
+    sources: Dict[str, str] = {}
+    headers = get_headers()
+    headers["Accept"] = "application/vnd.github.raw+json"
+    
+    for file_path in selected:
+        try:
+            resp = await client.get(
+                f"{GITHUB_API_BASE}/repos/{owner}/{repo}/contents/{file_path}",
+                headers=headers,
+            )
+            if resp.status_code == 200:
+                text = resp.text
+                if len(text) > max_chars_per_file:
+                    text = text[:max_chars_per_file] + "\n...[truncated]"
+                sources[file_path] = text
+        except Exception:
+            continue
+            
+    return sources
+
 async def get_repo_summary(repo_url: str) -> Dict[str, Any]:
     """Aggregate tree, README, open issues, and TODOs into a single context object."""
     owner, repo = parse_repo_url(repo_url)
@@ -206,6 +249,7 @@ async def get_repo_summary(repo_url: str) -> Dict[str, Any]:
         readme = await fetch_readme(client, owner, repo)
         open_issues = await fetch_open_issues(client, owner, repo, limit=5)
         todos = await grep_todos(client, owner, repo, tree, max_files=5)
+        source_files = await fetch_source_files(client, owner, repo, tree, max_files=4)
         
     return {
         "owner": owner,
@@ -215,6 +259,7 @@ async def get_repo_summary(repo_url: str) -> Dict[str, Any]:
         "readme": readme,
         "open_issues": open_issues,
         "todos": todos,
+        "source_files": source_files,
     }
 
 async def create_issue(target_repo: str, title: str, body: str, labels: Optional[List[str]] = None) -> Dict[str, Any]:
@@ -265,4 +310,5 @@ async def build_repo_summary(repo_url: str) -> Dict[str, Any]:
         "readme": summary.get("readme", ""),
         "open_issues": summary.get("open_issues", []),
         "todos": summary.get("todos", []),
+        "source_files": summary.get("source_files", {}),
     }

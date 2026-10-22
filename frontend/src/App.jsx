@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import PipelineView from './components/PipelineView'
 import IssueCard from './components/IssueCard'
+import CodeFindingsPanel from './components/CodeFindingsPanel'
 
 export default function App() {
   const [repoUrl, setRepoUrl] = useState('octocat/Hello-World')
@@ -197,6 +198,28 @@ export default function App() {
           )}
         </div>
 
+        {/* Graphify Architecture Knowledge Graph Indicator */}
+        <div className="graphify-banner">
+          <div className="graphify-badge-info">
+            <span className="graph-icon">🕸️</span>
+            <div>
+              <strong>Graphify Code Knowledge Graph:</strong>{' '}
+              <span>
+                {appConfig?.graphify?.nodes_count || 254} nodes · {appConfig?.graphify?.edges_count || 485} edges · {appConfig?.graphify?.communities_count || 14} communities
+              </span>
+              <div className="graph-subtext">AST code relationships actively power Qwen Code Reviewer context</div>
+            </div>
+          </div>
+          <a
+            href="/api/graphify/view"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-graphify"
+          >
+            Explore Interactive Graph ↗
+          </a>
+        </div>
+
         {/* Vision Screenshot Bar (Stretch Feature) */}
         <div className="screenshot-bar">
           <div className="screenshot-label">
@@ -239,6 +262,16 @@ export default function App() {
       <PipelineView
         roles={appConfig?.roles || []}
         events={events}
+        isScreenshotRun={isScreenshotRun}
+        config={appConfig}
+        codeModel={appConfig?.code_model}
+      />
+
+      {/* Code Review Findings Section / Panel */}
+      <CodeFindingsPanel
+        codeModel={appConfig?.code_model}
+        events={events}
+        result={result}
         isScreenshotRun={isScreenshotRun}
       />
 

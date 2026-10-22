@@ -19,6 +19,18 @@ class DraftList(BaseModel):
     def cap_to_three(cls, v: List[Draft]) -> List[Draft]:
         return v[:3]
 
+class CodeFinding(BaseModel):
+    file_path: str = Field(description="Exact repository path where the finding was identified")
+    line_range: Optional[str] = Field(default=None, description="Line number or range (e.g. '14-25' or '42')")
+    severity: Literal["low", "medium", "high"] = Field(description="Severity level of the code issue")
+    explanation: str = Field(description="Clear explanation of the bug, edge case, or anti-pattern")
+    evidence: str = Field(description="Direct quote or snippet from source code demonstrating the finding")
+    title: Optional[str] = Field(default=None, description="Optional concise finding title")
+    suggested_fix: Optional[str] = Field(default=None, description="Optional suggested resolution")
+
+class CodeAnalysisResult(BaseModel):
+    findings: List[CodeFinding] = Field(default_factory=list, description="List of source code analysis findings")
+
 class JudgeResult(BaseModel):
     score: int = Field(ge=1, le=10, description="Quality score between 1 and 10")
     critique: str = Field(description="2 to 3 sentences naming the biggest weaknesses or praise")
@@ -35,6 +47,7 @@ class IssueResult(BaseModel):
 class RunResult(BaseModel):
     repo: str
     issues: List[IssueResult] = Field(default_factory=list)
+    code_findings: List[CodeFinding] = Field(default_factory=list)
 
 class PipelineEvent(BaseModel):
     run_id: str
@@ -42,7 +55,7 @@ class PipelineEvent(BaseModel):
     step: str
     role: str
     model: str
-    status: Literal["waiting", "running", "done", "error"]
+    status: Literal["waiting", "running", "done", "error", "skipped"]
     started_at: str
     duration_ms: Optional[int] = None
     detail: Optional[str] = None
