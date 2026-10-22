@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>hacktober_Kindling — Complete Call Flow &amp; Architecture Documentation</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+:root {
+  --bg: #0f172a; --surface: #1e293b; --border: #334155;
+  --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8;
+  --warn: #fbbf24; --err: #f87171; --ok: #34d399;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+.container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+h1 { font-size: 2.4rem; margin-bottom: 8px; background: linear-gradient(135deg, var(--accent), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+h2 { font-size: 1.7rem; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h3 { font-size: 1.25rem; margin: 32px 0 12px; color: var(--accent); }
+h4 { font-size: 1.05rem; margin: 20px 0 8px; color: var(--warn); }
+p { margin: 8px 0; color: var(--muted); }
+.subtitle { color: var(--muted); font-size: 1.1rem; margin-bottom: 32px; }
+.mermaid { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 0; overflow-x: auto; position: relative; }
+.mermaid.is-enhanced { padding: 0; overflow: hidden; min-height: 260px; }
+.mermaid-viewport { padding: 54px 24px 24px; overflow: hidden; cursor: grab; touch-action: none; min-height: 260px; }
+.mermaid-viewport.is-dragging { cursor: grabbing; }
+.mermaid-viewport svg { max-width: none !important; height: auto; transform-origin: 0 0; transition: transform 120ms ease; }
+.mermaid-toolbar { position: absolute; top: 10px; right: 10px; z-index: 3; display: flex; align-items: center; gap: 6px; padding: 6px; background: rgba(15,23,42,0.92); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.28); }
+.mermaid-toolbar button, .mermaid-toolbar .zoom-level { height: 28px; min-width: 32px; border: 1px solid var(--border); border-radius: 6px; background: #1e293b; color: var(--text); font: 600 0.78rem system-ui, sans-serif; display: inline-flex; align-items: center; justify-content: center; }
+.mermaid-toolbar button { cursor: pointer; }
+.mermaid-toolbar button:hover { border-color: var(--accent); color: var(--accent); }
+.mermaid-toolbar .zoom-level { min-width: 52px; color: var(--muted); background: transparent; }
+.call-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+.call-table th { background: #1a2744; color: var(--accent); text-align: left; padding: 10px 14px; border: 1px solid var(--border); }
+.call-table td { padding: 8px 14px; border: 1px solid var(--border); vertical-align: top; }
+.call-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+.tag-async { background: #7c3aed33; color: #a78bfa; }
+.tag-class { background: #05966933; color: var(--ok); }
+.tag-func { background: #2563eb33; color: var(--accent); }
+.tag-cmd { background: #d9770633; color: var(--warn); }
+.tag-endpoint { background: #dc262633; color: var(--err); }
+.tag-hook { background: #db277733; color: #f472b6; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 16px 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin: 16px 0; }
+.arrow-chain { font-family: 'Fira Code', monospace; font-size: 0.85rem; color: var(--accent); padding: 10px; background: rgba(56,189,248,0.06); border-radius: 6px; }
+code { font-family: 'Fira Code', 'Cascadia Code', monospace; background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 3px; font-size: 0.88em; }
+ul, ol { margin: 8px 0 8px 24px; color: var(--muted); }
+li { margin: 4px 0; }
+a { color: var(--accent); }
+hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+.nav { position: sticky; top: 0; background: var(--bg); z-index: 10; padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.9rem; }
+.nav a { text-decoration: none; }
+.nav a:hover { text-decoration: underline; }
+@media (max-width: 768px) { .container { padding: 16px; } h1 { font-size: 1.8rem; } }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>hacktober_Kindling — Complete Call Flow &amp; Architecture Documentation</h1>
+<p class="subtitle">Generated from graphify knowledge graph: 254 nodes, 485 edges, 14 communities. Commit: 4bf17c1</p>
+
+<div class="nav">
+    <a href="#overview">Architecture Overview</a>
+    <a href="#build-graph">Graph Build</a>
+    <a href="#cli-skills">CLI &amp; Skill Installers</a>
+    <a href="#ingest-cache-update">Ingestion &amp; Updates</a>
+    <a href="#security-global">Security &amp; Global Graph</a>
+    <a href="#tests-fixtures">Tests &amp; Fixtures</a>
+    <a href="#frontend-readmemd-react">Frontend Readmemd React</a>
+</div>
+
+<!-- ====== Architecture Overview ====== -->
+<h2 id="overview">1. Architecture Overview</h2>
+
+<div class="mermaid">
+
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    BUILD_GRAPH_321CBB04("Graph Build<br/><small>92 nodes</small>")
+    class BUILD_GRAPH_321CBB04 module;
+    CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>41 nodes</small>")
+    class CLI_SKILLS_9964CBB8 module;
+    INGEST_CACHE_UPDATE_FF457338("Ingestion &amp; Updates<br/><small>26 nodes</small>")
+    class INGEST_CACHE_UPDATE_FF457338 module;
+    SECURITY_GLOBAL_5B9C6A04("Security &amp; Global Graph<br/><small>11 nodes</small>")
+    class SECURITY_GLOBAL_5B9C6A04 module;
+    TESTS_FIXTURES_B84B1DCC("Tests &amp; Fixtures<br/><small>80 nodes</small>")
+    class TESTS_FIXTURES_B84B1DCC module;
+    FRONTEND_READMEMD_REACT_1725BBD0("Frontend Readmemd React<br/><small>4 nodes</small>")
+    class FRONTEND_READMEMD_REACT_1725BBD0 module;
+    CLI_SKILLS_9964CBB8 -->|imports x21| TESTS_FIXTURES_B84B1DCC
+    TESTS_FIXTURES_B84B1DCC -->|calls x13| BUILD_GRAPH_321CBB04
+    TESTS_FIXTURES_B84B1DCC -->|imports x12| CLI_SKILLS_9964CBB8
+    CLI_SKILLS_9964CBB8 -->|calls x8| INGEST_CACHE_UPDATE_FF457338
+    BUILD_GRAPH_321CBB04 -->|calls x8| TESTS_FIXTURES_B84B1DCC
+    TESTS_FIXTURES_B84B1DCC -->|imports x7| INGEST_CACHE_UPDATE_FF457338
+    CLI_SKILLS_9964CBB8 -->|calls x5| BUILD_GRAPH_321CBB04
+    INGEST_CACHE_UPDATE_FF457338 -->|imports x4| TESTS_FIXTURES_B84B1DCC
+    BUILD_GRAPH_321CBB04 -->|calls| INGEST_CACHE_UPDATE_FF457338
+    SECURITY_GLOBAL_5B9C6A04 -->|references| INGEST_CACHE_UPDATE_FF457338
+    INGEST_CACHE_UPDATE_FF457338 -->|imports| CLI_SKILLS_9964CBB8
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h4>Architecture Layers</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>Layer</th><th>Nodes</th><th>Communities</th></tr>
+      <tr><td>Graph Build</td><td>92</td><td><code>2, 5, 6, 7, 8, 9</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>41</td><td><code>1</code></td></tr><tr><td>Ingestion &amp; Updates</td><td>26</td><td><code>4</code></td></tr><tr><td>Security &amp; Global Graph</td><td>11</td><td><code>10, 11</code></td></tr><tr><td>Tests &amp; Fixtures</td><td>80</td><td><code>0, 3, 13</code></td></tr><tr><td>Frontend Readmemd React</td><td>4</td><td><code>12</code></td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Core Flow</h4>
+    <div class="arrow-chain">Security &amp; Global Graph -&gt; Ingestion &amp; Updates -&gt; Tests &amp; Fixtures -&gt; Graph Build -&gt; CLI &amp; Skill Installers -&gt; Frontend Readmemd React</div>
+  </div>
+</div>
+<div class="grid">
+  <div class="card">
+    <h4>Graph Report Highlights</h4>
+    <ul>
+      <li>254 nodes · 485 edges · 14 communities (13 shown, 1 thin omitted)</li>
+      <li>Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 29 edges (avg confidence: 0.92)</li>
+      <li>Token cost: 0 input · 0 output</li>
+      <li>1. `Draft` - 19 edges</li>
+      <li>2. `process_drafts()` - 17 edges</li>
+      <li>3. `KINDLING: Master Handoff for Antigravity CLI` - 17 edges</li>
+    </ul>
+  </div>
+</div>
+<hr>
+<!-- ====== 2. Graph Build ====== -->
+<h2 id="build-graph">2. Graph Build</h2>
+<p>Graph Build groups implementation around frontend, packagejson, handoffmd, build, mostly in frontend/package.json, HANDOFF.md, BUILD_PROMPTS.md. This section covers 92 nodes and 105 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Graph Build (92 nodes, 105 edges)
+    subgraph build_graph_backend_pipeline_py_c8548744["backend/pipeline.py"]
+        backend_pipeline_draft_issues_b569c65e("draft_issues()<br/><small>backend/pipeline.py</small>")
+        backend_pipeline_draft_step_7a622f12("draft_step()<br/><small>backend/pipeline.py</small>")
+        backend_pipeline_build_drafter_user_prompt_5ea89ce5("_build_drafter_user_prompt()<br/><small>backend/pipeline.py</small>")
+        backend_pipeline_scan_step_41dd1eb7("scan_step()<br/><small>backend/pipeline.py</small>")
+    end
+    subgraph build_graph_frontend_package_json_640d842e["frontend/package.json"]
+        frontend_package_9c7557c1("package.json")
+        ref_react_47bfb9fb("react<br/><small>frontend/package.json</small>")
+        ref_react_dom_61ea372d("react-dom<br/><small>frontend/package.json</small>")
+    end
+    subgraph build_graph_backend_llm_py_e2364b74["backend/llm.py"]
+        backend_llm_chat_json_980eee3e("chat_json()<br/><small>backend/llm.py</small>")
+        backend_llm_extract_json_0d42239c("extract_json()<br/><small>backend/llm.py</small>")
+    end
+    subgraph build_graph_frontend_src_App_jsx_55fd69e7["frontend/src/App.jsx"]
+        frontend_src_app_7da8908b("App.jsx")
+        frontend_src_app_app_9781f459("App()<br/><small>frontend/src/App.jsx</small>")
+    end
+    backend_main_screenshot_scan_vision_worker_51e364ac("vision_worker()<br/><small>backend/main.py</small>")
+    frontend_src_main_c1980e55("main.jsx")
+    frontend_test_code_reviewer_ff1766bb("test-code-reviewer.js")
+    frontend_vite_config_3ac59d22("vite.config.js")
+    frontend_src_components_codefindingspanel_codefi_a338a9d1("CodeFindingsPanel()<br/><small>src/components/CodeFindingsPanel.jsx</small>")
+    frontend_src_components_issuecard_issuecard_3a65abe5("IssueCard()<br/><small>src/components/IssueCard.jsx</small>")
+    frontend_src_components_pipelineview_pipelinevie_82c05fd2("PipelineView()<br/><small>src/components/PipelineView.jsx</small>")
+    frontend_src_app_app_9781f459 -->|calls| frontend_src_components_pipelineview_pipelinevie_82c05fd2
+    frontend_src_app_app_9781f459 -->|calls| frontend_src_components_codefindingspanel_codefi_a338a9d1
+    frontend_src_app_app_9781f459 -->|calls| frontend_src_components_issuecard_issuecard_3a65abe5
+    backend_llm_chat_json_980eee3e -->|calls| backend_llm_extract_json_0d42239c
+    backend_main_screenshot_scan_vision_worker_51e364ac -->|calls| backend_llm_extract_json_0d42239c
+    backend_pipeline_draft_issues_b569c65e -->|calls| backend_pipeline_draft_step_7a622f12
+    backend_pipeline_draft_step_7a622f12 -->|calls| backend_pipeline_build_drafter_user_prompt_5ea89ce5
+    backend_pipeline_draft_step_7a622f12 -->|calls| backend_llm_chat_json_980eee3e
+    backend_pipeline_scan_step_41dd1eb7 -->|calls| backend_llm_chat_json_980eee3e
+    frontend_package_9c7557c1 -->|imports| ref_react_47bfb9fb
+    frontend_package_9c7557c1 -->|imports| ref_react_dom_61ea372d
+    frontend_src_app_7da8908b -->|imports| frontend_src_components_pipelineview_pipelinevie_82c05fd2
+    frontend_src_app_7da8908b -->|imports| frontend_src_components_issuecard_issuecard_3a65abe5
+    frontend_src_app_7da8908b -->|imports| frontend_src_components_codefindingspanel_codefi_a338a9d1
+    frontend_src_app_7da8908b -->|imports| ref_react_47bfb9fb
+    frontend_src_main_c1980e55 -->|imports| frontend_src_app_app_9781f459
+    frontend_src_main_c1980e55 -->|imports| ref_react_47bfb9fb
+    frontend_src_main_c1980e55 -->|imports| ref_react_dom_61ea372d
+    frontend_src_main_c1980e55 -->|imports| frontend_src_app_7da8908b
+    frontend_test_code_reviewer_ff1766bb -->|imports| ref_react_47bfb9fb
+    frontend_test_code_reviewer_ff1766bb -->|imports| ref_react_dom_61ea372d
+    %% Omitted for readability: 74 nodes, 0 edges
+    class backend_pipeline_draft_issues_b569c65e function;
+    class backend_pipeline_draft_step_7a622f12 function;
+    class backend_pipeline_build_drafter_user_prompt_5ea89ce5 function;
+    class backend_pipeline_scan_step_41dd1eb7 function;
+    class frontend_package_9c7557c1 function;
+    class ref_react_47bfb9fb function;
+    class ref_react_dom_61ea372d function;
+    class backend_llm_chat_json_980eee3e function;
+    class backend_llm_extract_json_0d42239c function;
+    class frontend_src_app_7da8908b ui;
+    class frontend_src_app_app_9781f459 ui;
+    class backend_main_screenshot_scan_vision_worker_51e364ac function;
+    class frontend_src_main_c1980e55 ui;
+    class frontend_test_code_reviewer_ff1766bb test;
+    class frontend_vite_config_3ac59d22 module;
+    class frontend_src_components_codefindingspanel_codefi_a338a9d1 ui;
+    class frontend_src_components_issuecard_issuecard_3a65abe5 ui;
+    class frontend_src_components_pipelineview_pipelinevie_82c05fd2 ui;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>App()</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>main.jsx</code><br><small style="color:var(--muted)">frontend/src/main.jsx</small></td>
+  <td><code>CodeFindingsPanel()</code><br><small style="color:var(--muted)">src/components/CodeFindingsPanel.jsx</small><br><code>IssueCard()</code><br><small style="color:var(--muted)">src/components/IssueCard.jsx</small><br><code>PipelineView()</code><br><small style="color:var(--muted)">src/components/PipelineView.jsx</small></td>
+  <td>App() node in frontend/src/App.jsx.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>CodeFindingsPanel()</code><br><small style="color:var(--muted)">src/components/CodeFindingsPanel.jsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App()</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small><br><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>CodeFindingsPanel() node in src/components/CodeFindingsPanel.jsx.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>IssueCard()</code><br><small style="color:var(--muted)">src/components/IssueCard.jsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App()</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small><br><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>IssueCard() node in src/components/IssueCard.jsx.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>PipelineView()</code><br><small style="color:var(--muted)">src/components/PipelineView.jsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App()</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small><br><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>PipelineView() node in src/components/PipelineView.jsx.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>runTests()</code><br><small style="color:var(--muted)">frontend/test-code-reviewer.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>package.json</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>@types/react</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>@types/react-dom</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>@vitejs/plugin-react</code><br><small style="color:var(--muted)">frontend/package.json</small><br>+4 more</td>
+  <td>package.json node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>dependencies</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>dependencies node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>react node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>react-dom</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>react-dom node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>devDependencies</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>devDependencies node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>oxlint</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>oxlint node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>@types/react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>@types/react node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>@types/react-dom</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>@types/react-dom node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>vite</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>vite node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>@vitejs/plugin-react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>@vitejs/plugin-react node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>name</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>name node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>private</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>private node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>type</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>type node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>version</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>version node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>main.jsx</code><br><small style="color:var(--muted)">frontend/src/main.jsx</small></td>
+  <td><code>CodeFindingsPanel()</code><br><small style="color:var(--muted)">src/components/CodeFindingsPanel.jsx</small><br><code>CodeFindingsPanel.jsx</code><br><small style="color:var(--muted)">src/components/CodeFindingsPanel.jsx</small><br><code>IssueCard()</code><br><small style="color:var(--muted)">src/components/IssueCard.jsx</small><br>+4 more</td>
+  <td>App.jsx node in frontend/src/App.jsx.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>CodeFindingsPanel.jsx</code><br><small style="color:var(--muted)">src/components/CodeFindingsPanel.jsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small></td>
+  <td><code>react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td>CodeFindingsPanel.jsx node in src/components/CodeFindingsPanel.jsx.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>IssueCard.jsx</code><br><small style="color:var(--muted)">src/components/IssueCard.jsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small></td>
+  <td><code>react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td>IssueCard.jsx node in src/components/IssueCard.jsx.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>PipelineView.jsx</code><br><small style="color:var(--muted)">src/components/PipelineView.jsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small></td>
+  <td><code>react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td>PipelineView.jsx node in src/components/PipelineView.jsx.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>main.jsx</code><br><small style="color:var(--muted)">frontend/src/main.jsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>App()</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small><br><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small><br><code>frontend_src_index</code><br>+2 more</td>
+  <td>main.jsx node in frontend/src/main.jsx.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>test-code-reviewer.js</code><br><small style="color:var(--muted)">frontend/test-code-reviewer.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>react</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>react-dom</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>ref_node_assert</code><br>+1 more</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>vite.config.js</code><br><small style="color:var(--muted)">frontend/vite.config.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>@vitejs/plugin-react</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>vite</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>oxlint</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>package.json</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td>No direct outbound edge</td>
+  <td>oxlint node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>App.jsx</code><br><small style="color:var(--muted)">frontend/src/App.jsx</small><br><code>CodeFindingsPanel.jsx</code><br><small style="color:var(--muted)">src/components/CodeFindingsPanel.jsx</small><br><code>IssueCard.jsx</code><br><small style="color:var(--muted)">src/components/IssueCard.jsx</small><br>+4 more</td>
+  <td>No direct outbound edge</td>
+  <td>react node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>react-dom</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>main.jsx</code><br><small style="color:var(--muted)">frontend/src/main.jsx</small><br><code>package.json</code><br><small style="color:var(--muted)">frontend/package.json</small><br><code>test-code-reviewer.js</code><br><small style="color:var(--muted)">frontend/test-code-reviewer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>react-dom node in frontend/package.json.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>@types/react</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>package.json</code><br><small style="color:var(--muted)">frontend/package.json</small></td>
+  <td>No direct outbound edge</td>
+  <td>@types/react node in frontend/package.json.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>frontend/package.json</code></td><td>27 nodes</td></tr>
+<tr><td><code>HANDOFF.md</code></td><td>19 nodes</td></tr>
+<tr><td><code>BUILD_PROMPTS.md</code></td><td>10 nodes</td></tr>
+<tr><td><code>backend/pipeline.py</code></td><td>7 nodes</td></tr>
+<tr><td><code>frontend/.oxlintrc.json</code></td><td>6 nodes</td></tr>
+<tr><td><code>backend/llm.py</code></td><td>4 nodes</td></tr>
+<tr><td><code>frontend/src/App.jsx</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/components/CodeFindingsPanel.jsx</code></td><td>2 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x56, imports x17, imports x11, calls x9. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 3. CLI & Skill Installers ====== -->
+<h2 id="cli-skills">3. CLI &amp; Skill Installers</h2>
+<p>CLI &amp; Skill Installers groups implementation around backend, mainpy, run, eventspy, mostly in backend/main.py, backend/events.py, backend/pipeline.py. This section covers 41 nodes and 62 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: CLI &amp; Skill Installers (41 nodes, 62 edges)
+    subgraph cli_skills_External_generated_0c226fa1["External / generated"]
+        uuid_48e3462c("uuid")
+        base64_8095e159("base64")
+        asyncio_4f5a0f01("asyncio")
+        json_05d97e6e("json")
+        datetime_89ffad08("datetime")
+        fastapi_staticfiles_ddb151bc("fastapi_staticfiles")
+        fastapi_responses_a75a9e69("fastapi_responses")
+        fastapi_41a1373c("fastapi")
+        fastapi_middleware_cors_2b7bf539("fastapi_middleware_cors")
+        backend_events_py_any_48aafb4a("Any")
+    end
+    subgraph cli_skills_backend_events_py_854cc030["backend/events.py"]
+        backend_events_44ee64b7("events.py")
+        backend_events_new_run_d7d4c952("new_run()<br/><small>backend/events.py</small>")
+        backend_events_make_emitter_b67eb827("make_emitter()<br/><small>backend/events.py</small>")
+    end
+    subgraph cli_skills_backend_main_py_4cd387b2["backend/main.py"]
+        backend_main_abdb2b1a("main.py")
+        backend_main_screenshot_scan_5be4df3d("screenshot_scan()<br/><small>backend/main.py</small>")
+        backend_main_start_scan_22579783("start_scan()<br/><small>backend/main.py</small>")
+    end
+    subgraph cli_skills_backend_pipeline_py_91971fab["backend/pipeline.py"]
+        backend_pipeline_run_pipeline_316a13ea("run_pipeline()<br/><small>backend/pipeline.py</small>")
+        backend_pipeline_replay_cached_47787dab("replay_cached()<br/><small>backend/pipeline.py</small>")
+    end
+    backend_events_new_run_d7d4c952 -->|calls| uuid_48e3462c
+    backend_main_screenshot_scan_5be4df3d -->|calls| base64_8095e159
+    backend_main_screenshot_scan_5be4df3d -->|calls| backend_events_new_run_d7d4c952
+    backend_main_screenshot_scan_5be4df3d -->|calls| backend_events_make_emitter_b67eb827
+    backend_main_screenshot_scan_5be4df3d -->|calls| asyncio_4f5a0f01
+    backend_main_start_scan_22579783 -->|calls| backend_events_new_run_d7d4c952
+    backend_main_start_scan_22579783 -->|calls| asyncio_4f5a0f01
+    backend_main_start_scan_22579783 -->|calls| backend_pipeline_run_pipeline_316a13ea
+    backend_pipeline_replay_cached_47787dab -->|calls| asyncio_4f5a0f01
+    backend_pipeline_run_pipeline_316a13ea -->|calls| backend_events_make_emitter_b67eb827
+    backend_pipeline_run_pipeline_316a13ea -->|calls| json_05d97e6e
+    backend_pipeline_run_pipeline_316a13ea -->|calls| backend_pipeline_replay_cached_47787dab
+    backend_events_44ee64b7 -->|imports| uuid_48e3462c
+    backend_events_44ee64b7 -->|imports| datetime_89ffad08
+    backend_main_abdb2b1a -->|imports| asyncio_4f5a0f01
+    backend_main_abdb2b1a -->|imports| backend_events_make_emitter_b67eb827
+    backend_main_abdb2b1a -->|imports| backend_events_new_run_d7d4c952
+    backend_main_abdb2b1a -->|imports| backend_pipeline_run_pipeline_316a13ea
+    backend_main_abdb2b1a -->|imports| base64_8095e159
+    backend_main_abdb2b1a -->|imports| json_05d97e6e
+    backend_main_abdb2b1a -->|imports| backend_events_44ee64b7
+    backend_main_abdb2b1a -->|imports| fastapi_staticfiles_ddb151bc
+    backend_main_abdb2b1a -->|imports| fastapi_responses_a75a9e69
+    backend_main_abdb2b1a -->|imports| fastapi_41a1373c
+    %% Omitted for readability: 23 nodes, 1 edges
+    class uuid_48e3462c function;
+    class base64_8095e159 function;
+    class asyncio_4f5a0f01 async;
+    class json_05d97e6e function;
+    class datetime_89ffad08 function;
+    class fastapi_staticfiles_ddb151bc api;
+    class fastapi_responses_a75a9e69 api;
+    class fastapi_41a1373c api;
+    class fastapi_middleware_cors_2b7bf539 api;
+    class backend_events_py_any_48aafb4a klass;
+    class backend_events_44ee64b7 module;
+    class backend_events_new_run_d7d4c952 function;
+    class backend_events_make_emitter_b67eb827 function;
+    class backend_main_abdb2b1a module;
+    class backend_main_screenshot_scan_5be4df3d function;
+    class backend_main_start_scan_22579783 function;
+    class backend_pipeline_run_pipeline_316a13ea function;
+    class backend_pipeline_replay_cached_47787dab function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>ApproveRequest</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td>ApproveRequest node in backend/main.py.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>ScanRequest</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Starts scanning or handles scan status.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>make_emitter()</code><br><small style="color:var(--muted)">backend/events.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>pipeline.py</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>run_pipeline()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+1 more</td>
+  <td><code>emit()</code><br><small style="color:var(--muted)">backend/events.py</small></td>
+  <td>make_emitter() node in backend/events.py.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>new_run()</code><br><small style="color:var(--muted)">backend/events.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>screenshot_scan()</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>start_scan()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><code>uuid</code></td>
+  <td>new_run() node in backend/events.py.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>approve_draft()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>create_issue()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td>approve_draft() node in backend/main.py.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>get_configuration()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>roles()</code><br><small style="color:var(--muted)">backend/config.py</small></td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>root()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>root() node in backend/main.py.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>screenshot_scan()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>asyncio</code><br><code>base64</code><br><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small><br>+3 more</td>
+  <td>Starts scanning or handles scan status.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>serve_root()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>serve_root() node in backend/main.py.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>serve_spa()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>serve_spa() node in backend/main.py.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>start_scan()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>asyncio</code><br><code>new_run()</code><br><small style="color:var(--muted)">backend/events.py</small><br><code>parse_repo_url()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br>+1 more</td>
+  <td>Starts scanning or handles scan status.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>stream_run_events()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-async">Async</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>stream_run_events() node in backend/main.py.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>event_generator()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>event_generator() node in backend/main.py.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>replay_cached()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>run_pipeline()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><code>asyncio</code></td>
+  <td>Caches analysis results or computes cache keys.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>run_pipeline()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>start_scan()</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><code>build_repo_summary()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>code_analysis_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>draft_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+8 more</td>
+  <td>run_pipeline() node in backend/pipeline.py.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>events.py</code><br><small style="color:var(--muted)">backend/events.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>pipeline.py</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><code>datetime</code><br><code>typing</code><br><code>uuid</code></td>
+  <td>Module file in backend/events.py.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>Any</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Any node in project.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>__init__.py</code><br><small style="color:var(--muted)">backend/__init__.py</small><br><code>asyncio</code><br><code>base64</code><br>+24 more</td>
+  <td>Module file in backend/main.py.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>BaseModel</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>BaseModel node in project.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>get</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>get node in project.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>post</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>post node in project.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>UploadFile</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>UploadFile node in project.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>Returns an asynchronous emitter function that appends sequence-stamped events.</code><br><small style="color:var(--muted)">backend/events.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Returns an asynchronous emitter function that appends sequence-stamped events..</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>Initializes a new run entry and returns its unique run_id.</code><br><small style="color:var(--muted)">backend/events.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Initializes a new run entry and returns its unique run_id..</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>Converts approved draft into a formatted GitHub issue and posts to TARGET_REPO.</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Converts approved draft into a formatted GitHub issue and posts to TARGET_REPO..</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>Multimodal Vision endpoint: converts a bug screenshot into a structured issue…</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Multimodal Vision endpoint: converts a bug screenshot into a structured issue….</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>Root status endpoint directing visitors to frontend or interactive docs.</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Root status endpoint directing visitors to frontend or interactive docs..</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>Returns active crew configuration, assigned open models, target repo, and demo…</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Returns active crew configuration, assigned open models, target repo, and demo….</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>Initiates an asynchronous repository scan run and returns run_id for SSE…</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Initiates an asynchronous repository scan run and returns run_id for SSE….</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>Streams pipeline events in real-time using Server-Sent Events (SSE).</code><br><small style="color:var(--muted)">backend/main.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Streams pipeline events in real-time using Server-Sent Events (SSE)..</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>backend/main.py</code></td><td>18 nodes</td></tr>
+<tr><td><code>backend/events.py</code></td><td>5 nodes</td></tr>
+<tr><td><code>backend/pipeline.py</code></td><td>4 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x13, references x12, calls x12, explains x10. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 4. Ingestion & Updates ====== -->
+<h2 id="ingest-cache-update">4. Ingestion &amp; Updates</h2>
+<p>Ingestion &amp; Updates groups implementation around github, toolspy, backend, repo, mostly in backend/github_tools.py. This section covers 26 nodes and 51 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Ingestion &amp; Updates (26 nodes, 51 edges)
+    subgraph ingest_cache_update_backend_github_tools_py_d1c72991["backend/github_tools.py"]
+        backend_github_tools_get_repo_summary_a5d72605("get_repo_summary()<br/><small>backend/github_tools.py</small>")
+        backend_github_tools_create_issue_f6d8b473("create_issue()<br/><small>backend/github_tools.py</small>")
+        backend_github_tools_0425473d("github_tools.py")
+        backend_github_tools_find_todos_bd592461("find_todos()<br/><small>backend/github_tools.py</small>")
+        backend_github_tools_build_repo_summary_fef4dea4("build_repo_summary()<br/><small>backend/github_tools.py</small>")
+        backend_github_tools_create_issue_on_target_repo_a10401f2("on target repo()<br/><small>backend/github_tools.py</small>")
+        backend_github_tools_parse_repo_url_f2e03967("parse_repo_url()<br/><small>backend/github_tools.py</small>")
+        backend_github_tools_get_headers_f28e6e2a("get_headers()<br/><small>backend/github_tools.py</small>")
+        backend_github_tools_fetch_open_issues_3b4b109c("fetch_open_issues()<br/><small>backend/github_tools.py</small>")
+        backend_github_tools_fetch_readme_883c107f("fetch_readme()<br/><small>backend/github_tools.py</small>")
+        backend_github_tools_fetch_repo_tree_4c133fcb("fetch_repo_tree()<br/><small>backend/github_tools.py</small>")
+        backend_github_tools_fetch_source_files_33f59362("fetch_source_files()<br/><small>backend/github_tools.py</small>")
+        backend_github_tools_is_comment_todo_2c12a79e("is_comment_todo()<br/><small>backend/github_tools.py</small>")
+        backend_github_tools_rationale_244_fda7fa4b("Aggregate tree, README, open issues, an...<br/><small>backend/github_tools.py</small>")
+    end
+    subgraph ingest_cache_update_External_generated_9d67cab5["External / generated"]
+        httpx_f79177b0("httpx")
+        re_c387c982("re")
+        backend_github_tools_py_any_0f55c466("Any")
+        asyncclient_eb4f197c("AsyncClient")
+    end
+    backend_github_tools_build_repo_summary_fef4dea4 -->|calls| backend_github_tools_get_repo_summary_a5d72605
+    backend_github_tools_create_issue_f6d8b473 -->|calls| backend_github_tools_parse_repo_url_f2e03967
+    backend_github_tools_create_issue_f6d8b473 -->|calls| backend_github_tools_get_headers_f28e6e2a
+    backend_github_tools_create_issue_f6d8b473 -->|calls| httpx_f79177b0
+    backend_github_tools_create_issue_on_target_repo_a10401f2 -->|calls| backend_github_tools_create_issue_f6d8b473
+    backend_github_tools_fetch_open_issues_3b4b109c -->|calls| backend_github_tools_get_headers_f28e6e2a
+    backend_github_tools_fetch_readme_883c107f -->|calls| backend_github_tools_get_headers_f28e6e2a
+    backend_github_tools_fetch_repo_tree_4c133fcb -->|calls| backend_github_tools_get_headers_f28e6e2a
+    backend_github_tools_fetch_source_files_33f59362 -->|calls| backend_github_tools_get_headers_f28e6e2a
+    backend_github_tools_find_todos_bd592461 -->|calls| backend_github_tools_get_headers_f28e6e2a
+    backend_github_tools_find_todos_bd592461 -->|calls| backend_github_tools_is_comment_todo_2c12a79e
+    backend_github_tools_get_repo_summary_a5d72605 -->|calls| backend_github_tools_parse_repo_url_f2e03967
+    backend_github_tools_get_repo_summary_a5d72605 -->|calls| httpx_f79177b0
+    backend_github_tools_get_repo_summary_a5d72605 -->|calls| backend_github_tools_fetch_repo_tree_4c133fcb
+    backend_github_tools_get_repo_summary_a5d72605 -->|calls| backend_github_tools_fetch_readme_883c107f
+    backend_github_tools_get_repo_summary_a5d72605 -->|calls| backend_github_tools_fetch_open_issues_3b4b109c
+    backend_github_tools_get_repo_summary_a5d72605 -->|calls| backend_github_tools_fetch_source_files_33f59362
+    backend_github_tools_is_comment_todo_2c12a79e -->|calls| re_c387c982
+    backend_github_tools_parse_repo_url_f2e03967 -->|calls| re_c387c982
+    backend_github_tools_0425473d -->|imports| re_c387c982
+    backend_github_tools_0425473d -->|imports| httpx_f79177b0
+    %% Omitted for readability: 8 nodes, 0 edges
+    class backend_github_tools_get_repo_summary_a5d72605 function;
+    class backend_github_tools_create_issue_f6d8b473 function;
+    class backend_github_tools_0425473d module;
+    class backend_github_tools_find_todos_bd592461 function;
+    class backend_github_tools_build_repo_summary_fef4dea4 function;
+    class backend_github_tools_create_issue_on_target_repo_a10401f2 function;
+    class backend_github_tools_parse_repo_url_f2e03967 function;
+    class backend_github_tools_get_headers_f28e6e2a function;
+    class backend_github_tools_fetch_open_issues_3b4b109c function;
+    class backend_github_tools_fetch_readme_883c107f function;
+    class backend_github_tools_fetch_repo_tree_4c133fcb function;
+    class backend_github_tools_fetch_source_files_33f59362 function;
+    class backend_github_tools_is_comment_todo_2c12a79e function;
+    class backend_github_tools_rationale_244_fda7fa4b concept;
+    class httpx_f79177b0 function;
+    class re_c387c982 function;
+    class backend_github_tools_py_any_0f55c466 klass;
+    class asyncclient_eb4f197c entry;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>build_repo_summary()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>main()</code><br><small style="color:var(--muted)">scripts/run_cli.py</small><br><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>pipeline.py</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+2 more</td>
+  <td><code>get_repo_summary()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td>build_repo_summary() node in backend/github_tools.py.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>create_issue()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>approve_draft()</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>on target repo()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><code>get_headers()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>httpx</code><br><code>parse_repo_url()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td>create_issue() node in backend/github_tools.py.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>create_issue_on_target_repo()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>create_issue()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td>create_issue_on_target_repo() node in backend/github_tools.py.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>fetch_open_issues()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>get_repo_summary()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><code>get_headers()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td>fetch_open_issues() node in backend/github_tools.py.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>fetch_readme()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>get_repo_summary()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><code>get_headers()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td>fetch_readme() node in backend/github_tools.py.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>fetch_repo_tree()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>get_repo_summary()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><code>get_headers()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td>fetch_repo_tree() node in backend/github_tools.py.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>fetch_source_files()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>get_repo_summary()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><code>get_headers()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td>fetch_source_files() node in backend/github_tools.py.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>find_todos()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>github_tools.py</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><code>get_headers()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>is_comment_todo()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td>find_todos() node in backend/github_tools.py.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>get_headers()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>create_issue()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>fetch_open_issues()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>fetch_readme()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br>+3 more</td>
+  <td>No direct outbound edge</td>
+  <td>get_headers() node in backend/github_tools.py.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>get_repo_summary()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>build_repo_summary()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>pipeline.py</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><code>fetch_open_issues()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>fetch_readme()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>fetch_repo_tree()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br>+3 more</td>
+  <td>get_repo_summary() node in backend/github_tools.py.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>is_comment_todo()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>find_todos()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><code>re</code></td>
+  <td>is_comment_todo() node in backend/github_tools.py.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>parse_repo_url()</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>create_issue()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>get_repo_summary()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br>+3 more</td>
+  <td><code>re</code></td>
+  <td>parse_repo_url() node in backend/github_tools.py.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>AsyncClient</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-cmd">Entry</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>AsyncClient node in project.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>github_tools.py</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>pipeline.py</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>run_cli.py</code><br><small style="color:var(--muted)">scripts/run_cli.py</small></td>
+  <td><code>__init__.py</code><br><small style="color:var(--muted)">backend/__init__.py</small><br><code>base64</code><br><code>config.py</code><br><small style="color:var(--muted)">backend/config.py</small><br>+5 more</td>
+  <td>Module file in backend/github_tools.py.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>Any</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Any node in project.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>Checks if a line contains a real TODO/FIXME/HACK/BUG comment. Rules: - Line…</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Checks if a line contains a real TODO/FIXME/HACK/BUG comment. Rules: - Line….</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>Extract (owner, repo) from a GitHub URL or &#x27;owner/repo&#x27; string.</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Extract (owner, repo) from a GitHub URL or &#x27;owner/repo&#x27; string..</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>Scan up to max_files source files for real TODO / FIXME / HACK / BUG comments.…</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Scan up to max_files source files for real TODO / FIXME / HACK / BUG comments.….</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>Fetches actual source code for a bounded set of eligible files. Excludes…</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Fetches actual source code for a bounded set of eligible files. Excludes….</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>Aggregate tree, README, open issues, and TODOs into a single context object.</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Aggregate tree, README, open issues, and TODOs into a single context object..</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>Create a new issue on target_repo using GITHUB_TOKEN and return dict with…</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Create a new issue on target_repo using GITHUB_TOKEN and return dict with….</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>Fetch repo tree capped at 200 relevant files.</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Fetch repo tree capped at 200 relevant files..</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>Fetch repository README content, capped at 3000 chars.</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Fetch repository README content, capped at 3000 chars..</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>Fetch up to `limit` open issues (excluding pull requests).</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Design note for Fetch up to `limit` open issues (excluding pull requests)..</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>httpx</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>create_issue()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>get_repo_summary()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>github_tools.py</code><br><small style="color:var(--muted)">backend/github_tools.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>httpx node in project.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>re</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>github_tools.py</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>is_comment_todo()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br><code>llm.py</code><br><small style="color:var(--muted)">backend/llm.py</small><br>+1 more</td>
+  <td>No direct outbound edge</td>
+  <td>re node in project.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>backend/github_tools.py</code></td><td>22 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: calls x19, contains x11, references x9, explains x9. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 5. Security & Global Graph ====== -->
+<h2 id="security-global">5. Security &amp; Global Graph</h2>
+<p>Security &amp; Global Graph groups implementation around demo, readmemd, seed, repomd, mostly in README.md, scripts/seed_demo_repo.md. This section covers 11 nodes and 9 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Security &amp; Global Graph (11 nodes, 9 edges)
+    subgraph security_global_README_md_bb820159["README.md"]
+        readme_kindling_a6b81606("🔥 Kindling<br/><small>README.md</small>")
+        readme_f78a71af("README.md")
+        readme_quick_start_windows_powershell_b87eecf6("🚀 Quick Start (Windows PowerShell)<br/><small>README.md</small>")
+        readme_key_features_fae64a16("✨ Key Features<br/><small>README.md</small>")
+        readme_1_clone_set_up_python_environment_d2680054("1. Clone &amp; Set Up Python Environment<br/><small>README.md</small>")
+        readme_the_open_weight_model_crew_967bcccb("🧠 The Open-Weight Model Crew<br/><small>README.md</small>")
+    end
+    subgraph security_global_scripts_seed_demo_repo_md_bec08f8f["scripts/seed_demo_repo.md"]
+        scripts_seed_demo_repo_seed_demo_repo_guide_dbd1c593("Seed Demo Repo Guide<br/><small>scripts/seed_demo_repo.md</small>")
+        scripts_seed_demo_repo_f212366c("seed_demo_repo.md")
+        scripts_seed_demo_repo_recommended_demo_repo_str_364b33f4("Recommended Demo Repo Structure<br/><small>scripts/seed_demo_repo.md</small>")
+        scripts_seed_demo_repo_recommended_github_issues_1993828d("Recommended GitHub Issues to Create in...<br/><small>scripts/seed_demo_repo.md</small>")
+        scripts_seed_demo_repo_ui_bug_for_screenshot_dem_7627c06d("UI Bug for Screenshot Demo<br/><small>scripts/seed_demo_repo.md</small>")
+    end
+    readme_f78a71af -->|contains| readme_kindling_a6b81606
+    readme_kindling_a6b81606 -->|contains| readme_key_features_fae64a16
+    readme_kindling_a6b81606 -->|contains| readme_quick_start_windows_powershell_b87eecf6
+    readme_kindling_a6b81606 -->|contains| readme_the_open_weight_model_crew_967bcccb
+    readme_quick_start_windows_powershell_b87eecf6 -->|contains| readme_1_clone_set_up_python_environment_d2680054
+    scripts_seed_demo_repo_f212366c -->|contains| scripts_seed_demo_repo_seed_demo_repo_guide_dbd1c593
+    scripts_seed_demo_repo_seed_demo_repo_guide_dbd1c593 -->|contains| scripts_seed_demo_repo_recommended_github_issues_1993828d
+    scripts_seed_demo_repo_seed_demo_repo_guide_dbd1c593 -->|contains| scripts_seed_demo_repo_ui_bug_for_screenshot_dem_7627c06d
+    scripts_seed_demo_repo_seed_demo_repo_guide_dbd1c593 -->|contains| scripts_seed_demo_repo_recommended_demo_repo_str_364b33f4
+    class readme_kindling_a6b81606 concept;
+    class readme_f78a71af concept;
+    class readme_quick_start_windows_powershell_b87eecf6 concept;
+    class readme_key_features_fae64a16 concept;
+    class readme_1_clone_set_up_python_environment_d2680054 concept;
+    class readme_the_open_weight_model_crew_967bcccb concept;
+    class scripts_seed_demo_repo_seed_demo_repo_guide_dbd1c593 concept;
+    class scripts_seed_demo_repo_f212366c concept;
+    class scripts_seed_demo_repo_recommended_demo_repo_str_364b33f4 concept;
+    class scripts_seed_demo_repo_recommended_github_issues_1993828d concept;
+    class scripts_seed_demo_repo_ui_bug_for_screenshot_dem_7627c06d concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>README.md</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing README.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>1. Clone &amp; Set Up Python Environment</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 1. Clone &amp; Set Up Python Environment.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>✨ Key Features</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing ✨ Key Features.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>🔥 Kindling</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 🔥 Kindling.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>🚀 Quick Start (Windows PowerShell)</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 🚀 Quick Start (Windows PowerShell).</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>🧠 The Open-Weight Model Crew</code><br><small style="color:var(--muted)">README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing 🧠 The Open-Weight Model Crew.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>seed_demo_repo.md</code><br><small style="color:var(--muted)">scripts/seed_demo_repo.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing seed_demo_repo.md.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>Recommended Demo Repo Structure</code><br><small style="color:var(--muted)">scripts/seed_demo_repo.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Recommended Demo Repo Structure.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>Recommended GitHub Issues to Create in Advance</code><br><small style="color:var(--muted)">scripts/seed_demo_repo.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Recommended GitHub Issues to Create in Advance.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>Seed Demo Repo Guide</code><br><small style="color:var(--muted)">scripts/seed_demo_repo.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Seed Demo Repo Guide.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>UI Bug for Screenshot Demo</code><br><small style="color:var(--muted)">scripts/seed_demo_repo.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing UI Bug for Screenshot Demo.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>README.md</code></td><td>6 nodes</td></tr>
+<tr><td><code>scripts/seed_demo_repo.md</code></td><td>5 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x9. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 6. Tests & Fixtures ====== -->
+<h2 id="tests-fixtures">6. Tests &amp; Fixtures</h2>
+<p>Tests &amp; Fixtures groups implementation around backend, pipelinepy, model, test, mostly in tests/test_model_routing_and_pipeline.py, backend/pipeline.py, backend/schemas.py. This section covers 80 nodes and 174 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Tests &amp; Fixtures (80 nodes, 174 edges)
+    subgraph tests_fixtures_tests_test_model_routing_and_pipe_140c2191["tests/test_model_routing_and_pipeline.py"]
+        tests_test_model_routing_and_pipeline_testmodelr_9713dc9b("TestModelRoutingAndPipeline<br/><small>tests/test_model_routing_and_pipeline.py</small>")
+        tests_test_model_routing_and_pipeline_c26677d2("test_model_routing_and_pipeline.py")
+        tests_test_model_routing_and_pipeline_testmodelr_ea204aaa("setUp()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
+        tests_test_model_routing_and_pipeline_testmodelr_cc3ee1e7("test_rewrite_failure_falls_back_to_original_draft()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
+        tests_test_model_routing_and_pipeline_testmodelr_27ac1714("test_emitted_event_labels_and_models_used()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
+        tests_test_model_routing_and_pipeline_testmodelr_94a90954("test_qwen_code_analysis_called_with_source_context()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
+        tests_test_model_routing_and_pipeline_testmodelr_5b2e70f4("tearDown()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
+        tests_test_model_routing_and_pipeline_testmodelr_3a0861d2("test_empty_repository_does_not_crash_code_analysis()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
+        tests_test_model_routing_and_pipeline_testmodelr_59ced69f("test_model_routing_resolution()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
+        tests_test_model_routing_and_pipeline_testmodelr_b60f1949("test_drafter_selects_drafter_model()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
+        tests_test_model_routing_and_pipeline_testmodelr_fd784881("test_judge_selects_judge_model()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
+        tests_test_model_routing_and_pipeline_testmodelr_1c5c2df5("test_rewrite_selects_rewrite_model()<br/><small>tests/test_model_routing_and_pipeline.py</small>")
+    end
+    subgraph tests_fixtures_backend_schemas_py_bb1d97eb["backend/schemas.py"]
+        backend_schemas_draftlist_30cee0bb("DraftList<br/><small>backend/schemas.py</small>")
+        backend_schemas_draftlist_cap_to_three_55000d93("cap_to_three()<br/><small>backend/schemas.py</small>")
+    end
+    backend_llm_51430772("llm.py")
+    backend_pipeline_a0eea993("pipeline.py")
+    scripts_list_models_02d90a66("list_models.py")
+    scripts_run_cli_89dc9f80("run_cli.py")
+    backend_schemas_draftlist_30cee0bb -->|method| backend_schemas_draftlist_cap_to_three_55000d93
+    tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_ea204aaa
+    tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_cc3ee1e7
+    tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_27ac1714
+    tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_94a90954
+    tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_5b2e70f4
+    tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_3a0861d2
+    tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_59ced69f
+    tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_b60f1949
+    tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_fd784881
+    tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|method| tests_test_model_routing_and_pipeline_testmodelr_1c5c2df5
+    tests_test_model_routing_and_pipeline_testmodelr_b60f1949 -->|calls| backend_schemas_draftlist_30cee0bb
+    backend_pipeline_a0eea993 -->|imports| backend_schemas_draftlist_30cee0bb
+    backend_pipeline_a0eea993 -->|imports| backend_llm_51430772
+    tests_test_model_routing_and_pipeline_c26677d2 -->|imports| backend_schemas_draftlist_30cee0bb
+    tests_test_model_routing_and_pipeline_c26677d2 -->|imports| backend_llm_51430772
+    tests_test_model_routing_and_pipeline_c26677d2 -->|imports| backend_pipeline_a0eea993
+    scripts_list_models_02d90a66 -->|imports| backend_llm_51430772
+    scripts_run_cli_89dc9f80 -->|imports| backend_pipeline_a0eea993
+    tests_test_model_routing_and_pipeline_testmodelr_9713dc9b -->|uses| backend_schemas_draftlist_30cee0bb
+    %% Omitted for readability: 62 nodes, 0 edges
+    class tests_test_model_routing_and_pipeline_testmodelr_9713dc9b test;
+    class tests_test_model_routing_and_pipeline_c26677d2 test;
+    class tests_test_model_routing_and_pipeline_testmodelr_ea204aaa test;
+    class tests_test_model_routing_and_pipeline_testmodelr_cc3ee1e7 test;
+    class tests_test_model_routing_and_pipeline_testmodelr_27ac1714 test;
+    class tests_test_model_routing_and_pipeline_testmodelr_94a90954 test;
+    class tests_test_model_routing_and_pipeline_testmodelr_5b2e70f4 test;
+    class tests_test_model_routing_and_pipeline_testmodelr_3a0861d2 test;
+    class tests_test_model_routing_and_pipeline_testmodelr_59ced69f test;
+    class tests_test_model_routing_and_pipeline_testmodelr_b60f1949 test;
+    class tests_test_model_routing_and_pipeline_testmodelr_fd784881 test;
+    class tests_test_model_routing_and_pipeline_testmodelr_1c5c2df5 test;
+    class backend_schemas_draftlist_30cee0bb klass;
+    class backend_schemas_draftlist_cap_to_three_55000d93 function;
+    class backend_llm_51430772 module;
+    class backend_pipeline_a0eea993 module;
+    class scripts_list_models_02d90a66 module;
+    class scripts_run_cli_89dc9f80 entry;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>ScannerOutput</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Starts scanning or handles scan status.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>CodeAnalysisResult</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>code_analysis_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>pipeline.py</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>test_model_routing_and_pipeline.py</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small><br>+2 more</td>
+  <td>No direct outbound edge</td>
+  <td>Orchestrates analysis and returns structured documentation data.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>CodeFinding</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>_build_drafter_user_prompt()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>code_analysis_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>draft_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+4 more</td>
+  <td>No direct outbound edge</td>
+  <td>CodeFinding node in backend/schemas.py.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>ApproveRequest</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>draft_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>judge_one()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+13 more</td>
+  <td>No direct outbound edge</td>
+  <td>Draft node in backend/schemas.py.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>DraftList</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>draft_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>pipeline.py</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>test_drafter_selects_drafter_model()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small><br>+2 more</td>
+  <td><code>cap_to_three()</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td>DraftList node in backend/schemas.py.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>IssueResult</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>pipeline.py</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>process_drafts()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>IssueResult node in backend/schemas.py.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>JudgeResult</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>judge_one()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>pipeline.py</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>process_drafts()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+7 more</td>
+  <td>No direct outbound edge</td>
+  <td>JudgeResult node in backend/schemas.py.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>PipelineEvent</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>PipelineEvent node in backend/schemas.py.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>RunResult</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>pipeline.py</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>run_pipeline()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+2 more</td>
+  <td>No direct outbound edge</td>
+  <td>RunResult node in backend/schemas.py.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>CodeAnalysisResult</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>CodeFinding</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small><br>+12 more</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>code_analysis_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>run_pipeline()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>test_empty_repository_does_not_crash_code_analysis()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small><br><code>test_qwen_code_analysis_called_with_source_context()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><code>chat_json()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>CodeAnalysisResult</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>CodeFinding</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td>Orchestrates analysis and returns structured documentation data.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>judge_one()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>process_drafts()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>test_judge_selects_judge_model()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><code>chat_json()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>JudgeResult</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td>judge_one() node in backend/pipeline.py.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>process_drafts()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>main()</code><br><small style="color:var(--muted)">scripts/run_cli.py</small><br><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>run_pipeline()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+3 more</td>
+  <td><code>asyncio</code><br><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>IssueResult</code><br><small style="color:var(--muted)">backend/schemas.py</small><br>+4 more</td>
+  <td>process_drafts() node in backend/pipeline.py.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>passthrough()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>passthrough() node in backend/pipeline.py.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>rewrite_one()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>process_drafts()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>test_rewrite_selects_rewrite_model()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><code>chat_json()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>JudgeResult</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td>rewrite_one() node in backend/pipeline.py.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>.cap_to_three()</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>DraftList</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>.cap_to_three() node in backend/schemas.py.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>.setUp()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>.setUp() node in tests/test_model_routing_and_pipeline.py.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>.tearDown()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>.tearDown() node in tests/test_model_routing_and_pipeline.py.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>.test_drafter_selects_drafter_model()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><code>_get_model_for_role()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>draft_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+1 more</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>.test_emitted_event_labels_and_models_used()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>JudgeResult</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>mock_emit()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small><br>+1 more</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>mock_emit()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>mock_emit() node in tests/test_model_routing_and_pipeline.py.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>.test_empty_repository_does_not_crash_code_analysis()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><code>code_analysis_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td>Orchestrates analysis and returns structured documentation data.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>.test_judge_selects_judge_model()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><code>_get_model_for_role()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>judge_one()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br>+1 more</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>.test_qwen_code_analysis_called_with_source_context()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><code>code_analysis_step()</code><br><small style="color:var(--muted)">backend/pipeline.py</small><br><code>CodeAnalysisResult</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>CodeFinding</code><br><small style="color:var(--muted)">backend/schemas.py</small></td>
+  <td>Orchestrates analysis and returns structured documentation data.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>.test_rewrite_failure_falls_back_to_original_draft()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>fail_rewrite()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small><br><code>JudgeResult</code><br><small style="color:var(--muted)">backend/schemas.py</small><br>+2 more</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>fail_rewrite()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>test_rewrite_failure_falls_back_to_original_draft()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>fail_rewrite() node in tests/test_model_routing_and_pipeline.py.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>mock_emit()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>test_emitted_event_labels_and_models_used()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small><br><code>test_rewrite_failure_falls_back_to_original_draft()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td>No direct outbound edge</td>
+  <td>mock_emit() node in tests/test_model_routing_and_pipeline.py.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>.test_rewrite_selects_rewrite_model()</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td><code>TestModelRoutingAndPipeline</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><code>_get_model_for_role()</code><br><small style="color:var(--muted)">backend/llm.py</small><br><code>Draft</code><br><small style="color:var(--muted)">backend/schemas.py</small><br><code>JudgeResult</code><br><small style="color:var(--muted)">backend/schemas.py</small><br>+1 more</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>pipeline.py</code><br><small style="color:var(--muted)">backend/pipeline.py</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>main.py</code><br><small style="color:var(--muted)">backend/main.py</small><br><code>run_cli.py</code><br><small style="color:var(--muted)">scripts/run_cli.py</small><br><code>test_model_routing_and_pipeline.py</code><br><small style="color:var(--muted)">tests/test_model_routing_and_pipeline.py</small></td>
+  <td><code>__init__.py</code><br><small style="color:var(--muted)">backend/__init__.py</small><br><code>asyncio</code><br><code>build_repo_summary()</code><br><small style="color:var(--muted)">backend/github_tools.py</small><br>+21 more</td>
+  <td>Module file in backend/pipeline.py.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>BaseModel</code><br><small style="color:var(--muted)"></small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>BaseModel node in project.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>tests/test_model_routing_and_pipeline.py</code></td><td>23 nodes</td></tr>
+<tr><td><code>backend/pipeline.py</code></td><td>11 nodes</td></tr>
+<tr><td><code>backend/schemas.py</code></td><td>10 nodes</td></tr>
+<tr><td><code>backend/llm.py</code></td><td>8 nodes</td></tr>
+<tr><td><code>backend/config.py</code></td><td>3 nodes</td></tr>
+<tr><td><code>scripts/list_models.py</code></td><td>3 nodes</td></tr>
+<tr><td><code>scripts/run_cli.py</code></td><td>3 nodes</td></tr>
+<tr><td><code>backend/prompts.py</code></td><td>2 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: calls x35, imports x34, contains x25, imports x23. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 7. Frontend Readmemd React ====== -->
+<h2 id="frontend-readmemd-react">7. Frontend Readmemd React</h2>
+<p>Frontend Readmemd React groups implementation around frontend, readmemd, react, expanding, mostly in frontend/README.md. This section covers 4 nodes and 3 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Frontend Readmemd React (4 nodes, 3 edges)
+    frontend_readme_react_vite_4e8f2463("React + Vite<br/><small>frontend/README.md</small>")
+    frontend_readme_12075ecf("frontend/README.md")
+    frontend_readme_react_compiler_dae8ab5c("React Compiler<br/><small>frontend/README.md</small>")
+    frontend_readme_expanding_the_oxlint_configurati_79e1d063("Expanding the Oxlint configuration<br/><small>frontend/README.md</small>")
+    frontend_readme_12075ecf -->|contains| frontend_readme_react_vite_4e8f2463
+    frontend_readme_react_vite_4e8f2463 -->|contains| frontend_readme_react_compiler_dae8ab5c
+    frontend_readme_react_vite_4e8f2463 -->|contains| frontend_readme_expanding_the_oxlint_configurati_79e1d063
+    class frontend_readme_react_vite_4e8f2463 concept;
+    class frontend_readme_12075ecf concept;
+    class frontend_readme_react_compiler_dae8ab5c concept;
+    class frontend_readme_expanding_the_oxlint_configurati_79e1d063 concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>frontend/README.md</code><br><small style="color:var(--muted)">frontend/README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing frontend/README.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>Expanding the Oxlint configuration</code><br><small style="color:var(--muted)">frontend/README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Expanding the Oxlint configuration.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>React Compiler</code><br><small style="color:var(--muted)">frontend/README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing React Compiler.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>React + Vite</code><br><small style="color:var(--muted)">frontend/README.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing React + Vite.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>frontend/README.md</code></td><td>4 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x3. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<h2 id="stats">Project Statistics</h2>
+
+<div class="grid">
+  <div class="card">
+    <h4>Graph</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><td>Nodes</td><td>254</td></tr>
+      <tr><td>Edges</td><td>485</td></tr>
+      <tr><td>Hyperedges</td><td>0</td></tr>
+      <tr><td>Communities</td><td>14</td></tr>
+      <tr><td>Documented Sections</td><td>6</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Edge Confidence</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><td>EXTRACTED</td><td>456</td></tr>
+      <tr><td>INFERRED</td><td>29</td></tr>
+      <tr><td>AMBIGUOUS</td><td>0</td></tr>
+    </table>
+  </div>
+</div>
+
+<div style="text-align:center; padding:40px 0; color: var(--muted); font-size:0.9rem;">
+  <p>hacktober_Kindling — Architecture Documentation</p>
+  <p>Generated: 2026-10-22 12:48 UTC · graphify callflow-html</p>
+</div>
+
+</div><!-- .container -->
+
+<script>
+(function () {
+  const mermaidConfig = {
+    startOnLoad: false,
+    theme: 'dark',
+    securityLevel: 'loose',
+    flowchart: { htmlLabels: true, useMaxWidth: true },
+    themeVariables: {
+      primaryColor: '#1e293b',
+      primaryTextColor: '#e2e8f0',
+      primaryBorderColor: '#38bdf8',
+      secondaryColor: '#0f172a',
+      tertiaryColor: '#334155',
+      lineColor: '#64748b',
+      textColor: '#e2e8f0',
+    }
+  };
+
+  mermaid.initialize(mermaidConfig);
+
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function enhanceMermaidDiagrams() {
+    document.querySelectorAll('.mermaid').forEach((container) => {
+      if (container.dataset.zoomReady === 'true') return;
+      const svg = container.querySelector('svg');
+      if (!svg) return;
+
+      container.dataset.zoomReady = 'true';
+      container.classList.add('is-enhanced');
+
+      const viewport = document.createElement('div');
+      viewport.className = 'mermaid-viewport';
+      svg.parentNode.insertBefore(viewport, svg);
+      viewport.appendChild(svg);
+
+      const toolbar = document.createElement('div');
+      toolbar.className = 'mermaid-toolbar';
+      toolbar.innerHTML = [
+        '<button type="button" data-action="zoom-out" title="Zoom out">-</button>',
+        '<span class="zoom-level" data-role="level">100%</span>',
+        '<button type="button" data-action="zoom-in" title="Zoom in">+</button>',
+        '<button type="button" data-action="fit" title="Fit width">Fit</button>',
+        '<button type="button" data-action="reset" title="Reset view">Reset</button>'
+      ].join('');
+      container.insertBefore(toolbar, viewport);
+
+      const state = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0, originX: 0, originY: 0 };
+      const level = toolbar.querySelector('[data-role="level"]');
+
+      function applyTransform() {
+        svg.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+        level.textContent = `${Math.round(state.scale * 100)}%`;
+      }
+
+      function zoomBy(delta) {
+        state.scale = clamp(state.scale + delta, 0.25, 3);
+        applyTransform();
+      }
+
+      function reset() {
+        state.scale = 1;
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+      }
+
+      function fitWidth() {
+        const rawWidth = svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width
+          ? svg.viewBox.baseVal.width
+          : svg.getBoundingClientRect().width / state.scale;
+        if (!rawWidth) {
+          reset();
+          return;
+        }
+        state.scale = clamp((viewport.clientWidth - 48) / rawWidth, 0.25, 1.4);
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+      }
+
+      toolbar.addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-action]');
+        if (!button) return;
+        const action = button.dataset.action;
+        if (action === 'zoom-in') zoomBy(0.15);
+        if (action === 'zoom-out') zoomBy(-0.15);
+        if (action === 'fit') fitWidth();
+        if (action === 'reset') reset();
+      });
+
+      viewport.addEventListener('wheel', (event) => {
+        if (!event.ctrlKey && !event.metaKey) return;
+        event.preventDefault();
+        zoomBy(event.deltaY < 0 ? 0.1 : -0.1);
+      }, { passive: false });
+
+      viewport.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+        state.dragging = true;
+        state.startX = event.clientX;
+        state.startY = event.clientY;
+        state.originX = state.x;
+        state.originY = state.y;
+        viewport.classList.add('is-dragging');
+        viewport.setPointerCapture(event.pointerId);
+      });
+
+      viewport.addEventListener('pointermove', (event) => {
+        if (!state.dragging) return;
+        state.x = state.originX + event.clientX - state.startX;
+        state.y = state.originY + event.clientY - state.startY;
+        applyTransform();
+      });
+
+      function endDrag(event) {
+        if (!state.dragging) return;
+        state.dragging = false;
+        viewport.classList.remove('is-dragging');
+        if (viewport.hasPointerCapture(event.pointerId)) {
+          viewport.releasePointerCapture(event.pointerId);
+        }
+      }
+
+      viewport.addEventListener('pointerup', endDrag);
+      viewport.addEventListener('pointercancel', endDrag);
+      applyTransform();
+    });
+  }
+
+  function renderMermaid() {
+    const result = mermaid.run
+      ? mermaid.run({ querySelector: '.mermaid' })
+      : Promise.resolve();
+    Promise.resolve(result)
+      .then(enhanceMermaidDiagrams)
+      .catch((error) => {
+        console.error('Mermaid render failed:', error);
+        enhanceMermaidDiagrams();
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderMermaid);
+  } else {
+    renderMermaid();
+  }
+})();
+</script>
+
+</body>
+</html>

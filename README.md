@@ -12,9 +12,12 @@ Kindling uses an OpenAI-compatible API layer (`AsyncOpenAI`) so every role is po
 
 | Role | Default Model | Why This Model | License |
 | :--- | :--- | :--- | :--- |
-| **Drafter & Rewriter** | `nvidia/nemotron-3-ultra-550b-a55b` | High reasoning and code comprehension capacity for synthesizing repo trees, README gaps, and 11-line code context snippets around TODOs into structured JSON issues without hallucinating identifiers. | NVIDIA Open Model License |
+| **Code Reviewer** | `qwen/qwen-2.5-coder-32b-instruct` | Deep source code analysis and line-level bug evidence extraction, augmented with Graphify AST call flows. | Apache 2.0 |
+| **Drafter** | `nvidia/nemotron-3-ultra-550b-a55b` | High reasoning and code comprehension capacity for synthesizing repo trees, README gaps, and code context snippets into structured JSON issues without hallucinating identifiers. | NVIDIA Open Model License |
 | **Judge (Critic)** | `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning` *(or `meta/muse-glimmer-30b`)* | Fast, independent reasoning model dedicated to auditing drafts for clarity, hallucinated symbols, missing acceptance criteria, and scope creep. | NVIDIA Open Model License / Open-Weight |
+| **Quality Rewrite** | `google/gemma-4-31b-it` | Dedicated Gemma model to apply Judge critiques, polish acceptance criteria, and refine issue testability. | Gemma Terms of Use |
 | **Vision (Stretch)** | `meta/llama-3.2-11b-vision-instruct` | Multimodal open-weight model capable of turning UI bug screenshots into structured contributor issues. | Llama 3.2 Community License |
+| **Graphify Engine** | `Tree-sitter AST Extractor` | Deterministic local codebase knowledge graph (254 nodes, 485 edges) mapping call flows, module dependencies, and God Nodes. | Open-Source Tool |
 
 ---
 
@@ -44,7 +47,7 @@ cd Kindling
 
 ## 🏗️ System Architecture
 
-This diagram shows Kindling's repository-analysis and issue-generation flow. The optional Qwen code-analysis stage is separate from the contribution scanner. Graphify is not shown as an active stage because it has not yet been configured and verified in this repository.
+This diagram shows Kindling's repository-analysis and issue-generation flow. **Graphify** executes deterministic AST parsing, producing a structural knowledge graph (254 nodes, 485 edges) that enriches **Qwen Coder** with call hierarchies and module dependencies, while providing an interactive visualization in the web UI.
 
 ```mermaid
 flowchart TD
@@ -54,6 +57,12 @@ flowchart TD
         UI["Kindling UI"]
         PipelineView["Live Pipeline View"]
         IssueCards["Issue Cards and Review"]
+        GraphViewer["Graphify Interactive Graph Viewer"]
+    end
+
+    subgraph GraphifyEngine["Graphify Knowledge Graph"]
+        TreeSitter["Tree-sitter Deterministic AST Parser"]
+        GraphArtifacts["Graphify Graph (254 nodes · 485 edges)"]
     end
 
     subgraph Backend["Backend — FastAPI"]
@@ -61,7 +70,7 @@ flowchart TD
         Orchestrator["Pipeline Orchestrator"]
         GitHubIngestion["GitHub Repository Ingestion"]
         Scanner["Contribution Scanner — optional"]
-        CodeAnalysis["Code Analysis — optional"]
+        CodeAnalysis["Code Reviewer with AST Graph Context"]
         Qwen["Qwen Coder — CODE_MODEL"]
         Drafter["Nemotron Ultra — Drafter"]
         Judge["Nemotron Nano — Independent Judge"]
@@ -76,6 +85,12 @@ flowchart TD
     API --> Orchestrator
     Orchestrator --> GitHubIngestion
     GitHubIngestion <--> GitHub
+
+    TreeSitter --> GraphArtifacts
+    GraphArtifacts --> CodeAnalysis
+    GraphArtifacts --> API
+    API --> GraphViewer
+    GraphViewer --> UI
 
     Orchestrator --> Scanner
     Scanner --> Drafter
