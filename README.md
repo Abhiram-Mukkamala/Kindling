@@ -37,4 +37,65 @@ Kindling uses an OpenAI-compatible API layer (`AsyncOpenAI`) so every role is po
 ```powershell
 git clone [https://github.com/Abhiram-Mukkamala/Kindling.git](https://github.com/Abhiram-Mukkamala/Kindling.git)
 cd Kindling
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\\.venv\\Scripts\\python.exe -m pip install -r requirements.txt
+```
+
+---
+
+## 🏗️ System Architecture
+
+This diagram shows Kindling's repository-analysis and issue-generation flow. The optional Qwen code-analysis stage is separate from the contribution scanner. Graphify is not shown as an active stage because it has not yet been configured and verified in this repository.
+
+```mermaid
+flowchart TD
+    User([Maintainer])
+
+    subgraph Frontend["Frontend — React / Vite"]
+        UI["Kindling UI"]
+        PipelineView["Live Pipeline View"]
+        IssueCards["Issue Cards and Review"]
+    end
+
+    subgraph Backend["Backend — FastAPI"]
+        API["API Routes"]
+        Orchestrator["Pipeline Orchestrator"]
+        GitHubIngestion["GitHub Repository Ingestion"]
+        Scanner["Contribution Scanner — optional"]
+        CodeAnalysis["Code Analysis — optional"]
+        Qwen["Qwen Coder — CODE_MODEL"]
+        Drafter["Nemotron Ultra — Drafter"]
+        Judge["Nemotron Nano — Independent Judge"]
+        Rewrite["Gemma — Quality Rewrite"]
+    end
+
+    GitHub["GitHub API"]
+    ModelAPI["OpenAI-compatible Model API"]
+
+    User --> UI
+    UI <--> API
+    API --> Orchestrator
+    Orchestrator --> GitHubIngestion
+    GitHubIngestion <--> GitHub
+
+    Orchestrator --> Scanner
+    Scanner --> Drafter
+
+    Orchestrator --> CodeAnalysis
+    CodeAnalysis --> Qwen
+    Qwen --> Drafter
+
+    GitHubIngestion --> Drafter
+    Drafter --> Judge
+    Judge --> Rewrite
+
+    Drafter --> ModelAPI
+    Judge --> ModelAPI
+    Rewrite --> ModelAPI
+    Qwen --> ModelAPI
+
+    Orchestrator --> API
+    API --> PipelineView
+    API --> IssueCards
+    PipelineView --> UI
+    IssueCards --> UI
+```
